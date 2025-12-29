@@ -1,0 +1,36 @@
+---
+alwaysApply: true
+---
+
+# Project Rules (must follow)
+
+## Goal
+
+Build a mobile app (Expo RN) that records voice answers, sends audio to server for transcription + feedback analysis, then displays structured feedback.
+
+## Constraints
+
+- Keep it simple. No premature abstractions.
+- No global scores in UI. Only labels: low/medium/high, too_short/ok/too_long.
+- JSON-only responses from the AI endpoints.
+- Error states must be explicit and user-friendly.
+
+## Architecture
+
+- app/ = Expo React Native (TypeScript)
+- server/ = Express TypeScript
+- server exposes:
+  - POST /transcribe (multipart audio) -> { transcript: string }
+  - POST /analyze (json) -> { clarity, length, weak_words, suggestion, ... }
+
+## Coding standards
+
+- TypeScript strict
+- Small modules, 1 responsibility
+- Prefer functional components + hooks in app
+- Validate inputs on server (zod)
+- No secrets in repo (env only)
+
+## Deliverables
+
+- Working E2E flow: record -> upload -> transcript -> analyze -> feedback screen.

@@ -1,0 +1,12 @@
+{
+  "name": "clario-ai-interview-coach",
+  "private": true,
+  "scripts": {
+    "app": "pnpm --filter app start",
+    "server": "pnpm --filter server dev",
+    "dev": "concurrently \"pnpm app\" \"pnpm server\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "Clario - AI Interview Coach",
+    "slug": "clario-ai-interview-coach",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "clario",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.clario.interviewcoach"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.clario.interviewcoach"
+    },
+    "plugins": ["expo-router"]
+  }
+}
