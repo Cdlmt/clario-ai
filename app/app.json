@@ -17,6 +17,14 @@
       },
       "package": "com.clario.interviewcoach"
     },
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "69ee4426-d5d8-4821-898b-2f0459c3a7d7"
+      }
+    }
   }
 }
