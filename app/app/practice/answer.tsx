@@ -10,9 +10,3 @@ export default function AnswerRoute() {
     </PracticeAnswerLayout>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-})
