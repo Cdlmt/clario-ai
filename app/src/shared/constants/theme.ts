@@ -15,4 +15,5 @@ export const paddings = {
 
 export const gaps = {
   default: 20,
+  inner: 10,
 };
