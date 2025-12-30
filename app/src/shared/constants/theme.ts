@@ -3,12 +3,16 @@ export const colors = {
   secondary: '#000000',
   black: '#000000',
   white: '#FFFFFF',
-  lightGray: '#D3D3D3',
-  mediumGray: '#808080',
-  darkGray: '#A9A9A9',
+  lightGray: '#F1F1F1',
+  mediumGray: '#E0DFDF',
+  darkGray: '#D0D0D0',
 };
 
 export const paddings = {
   horizontal: 20,
   vertical: 20,
+};
+
+export const gaps = {
+  default: 20,
 };

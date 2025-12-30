@@ -1,11 +1,14 @@
-import { View, Pressable, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
 import Button from "../../../shared/ui/button";
 import Text from "../../../shared/ui/text";
 import { colors, paddings } from "../../../shared/constants/theme";
 
 export const OnboardingLandingPage = () => {
+  const router = useRouter();
+
   const handleGetStarted = () => {
-    // TODO: Navigate to next screen
+    router.push("/(onboarding)/(steps)/name");
   };
 
   return (
