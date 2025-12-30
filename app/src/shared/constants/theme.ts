@@ -7,3 +7,8 @@ export const colors = {
   mediumGray: '#808080',
   darkGray: '#A9A9A9',
 };
+
+export const paddings = {
+  horizontal: 20,
+  vertical: 20,
+};
