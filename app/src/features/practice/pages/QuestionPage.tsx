@@ -1,8 +1,9 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Text from '../../../shared/ui/text'
-import { gaps } from '../../../shared/constants/theme'
+import { gaps, heights } from '../../../shared/constants/theme'
 import ProgressBar from '../components/progress.bar'
+import PracticeBottomBar from '../components/practice.bottombar'
 
 const initialTimer = 30;
 
@@ -40,13 +41,13 @@ export default function QuestionPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: heights.bottomBar,
   },
   content: {
     flex: 1,
     height: '100%',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderWidth: 1,
   },
   questionContainer: {
     gap: gaps.inner,

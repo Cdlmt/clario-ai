@@ -17,3 +17,7 @@ export const gaps = {
   default: 20,
   inner: 10,
 };
+
+export const heights = {
+  bottomBar: 75,
+};

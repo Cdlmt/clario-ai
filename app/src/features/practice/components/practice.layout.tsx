@@ -2,6 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, paddings } from "../../../shared/constants/theme";
 import PracticeHeader from "./practice.header";
+import PracticeBottomBar from "./practice.bottombar";
 
 type PracticeLayoutProps = {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ export const PracticeLayout = ({ children }: PracticeLayoutProps) => {
       <View style={[styles.content, { paddingBottom: insets.bottom }]}>
         {children}
       </View>
+      <PracticeBottomBar />
     </View>
   );
 };
