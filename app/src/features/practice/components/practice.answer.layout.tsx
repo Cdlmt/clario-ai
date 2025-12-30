@@ -4,27 +4,26 @@ import { colors, paddings } from "../../../shared/constants/theme";
 import PracticeHeader from "./practice.header";
 import PracticeBottomBar from "./practice.bottombar";
 
-type PracticeLayoutProps = {
+type PracticeAnswerLayoutProps = {
   children: React.ReactNode;
 };
 
-export const PracticeLayout = ({ children }: PracticeLayoutProps) => {
+export const PracticeAnswerLayout = ({ children }: PracticeAnswerLayoutProps) => {
   const insets = useSafeAreaInsets();
 
   return (
     <View style={styles.container}>
-      <PracticeHeader theme="light" />
+      <PracticeHeader theme="dark" />
       <View style={[styles.content, { paddingBottom: insets.bottom }]}>
         {children}
       </View>
-      <PracticeBottomBar />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.secondary,
     flex: 1,
   },
   content: {

@@ -4,13 +4,19 @@ import { colors, heights, paddings } from '../../../shared/constants/theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Button from '../../../shared/ui/button';
 import Text from '../../../shared/ui/text';
+import { useRouter } from 'expo-router';
 
 export default function PracticeBottomBar() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+
+  const handleStartAnswer = () => {
+    router.push("/practice/answer");
+  }
 
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom, height: heights.bottomBar + insets.bottom }]}>
-      <Button>
+      <Button onPress={handleStartAnswer}>
         <Text variant="body" weight="bold" color={colors.white}>Start answering  🎙️️</Text>
       </Button>
     </View>
@@ -27,5 +33,6 @@ const styles = StyleSheet.create({
     right: 0,
     borderTopWidth: 1,
     borderTopColor: colors.lightGray,
+    backgroundColor: colors.white,
   },
 })

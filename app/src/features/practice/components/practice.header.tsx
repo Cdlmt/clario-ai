@@ -12,7 +12,13 @@ const STEPS_CONFIG = {
   "/practice/feedback": "Your feedback",
 } as const;
 
-export default function PracticeHeader() {
+type PracticeHeaderProps = {
+  theme: 'light' | 'dark';
+};
+
+export default function PracticeHeader(props: PracticeHeaderProps) {
+  const { theme } = props;
+
   const pathname = usePathname();
   const title = STEPS_CONFIG[pathname as keyof typeof STEPS_CONFIG] ?? "Interview question";
   const questionCategory = "Developer · Behavioral";
@@ -21,8 +27,8 @@ export default function PracticeHeader() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.content}>
-        <Text variant="h2" weight="bold">{title}</Text>
-        <Text variant="largeBody" weight="medium">{questionCategory}</Text>
+        <Text variant="h2" weight="bold" color={theme === 'light' ? colors.black : colors.white}>{title}</Text>
+        <Text variant="largeBody" weight="medium" color={theme === 'light' ? colors.black : colors.white}>{questionCategory}</Text>
       </View>
       <View style={styles.divider} />
     </View>

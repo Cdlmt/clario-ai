@@ -3,12 +3,17 @@ import React, { useEffect, useState } from 'react'
 import Text from '../../../shared/ui/text'
 import { gaps, heights } from '../../../shared/constants/theme'
 import ProgressBar from '../components/progress.bar'
-import PracticeBottomBar from '../components/practice.bottombar'
+import { useRouter } from 'expo-router'
 
 const initialTimer = 30;
 
 export default function QuestionPage() {
+  const router = useRouter();
   const [timeLeft, setTimeLeft] = useState(initialTimer);
+
+  const handleStartAnswer = () => {
+    router.push("/practice/answer");
+  }
 
   useEffect(() => {
     if (timeLeft <= 0) {

@@ -1,14 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { Slot } from 'expo-router'
-import { PracticeLayout as PracticeLayoutComponent } from '../../src/features/practice/components/practice.layout'
+import { Stack } from 'expo-router'
 
 export default function PracticeLayout() {
-  return (
-    <PracticeLayoutComponent>
-      <Slot />
-    </PracticeLayoutComponent>
-  )
+  return <Stack screenOptions={{ headerShown: false }} />
 }
-
-const styles = StyleSheet.create({})
