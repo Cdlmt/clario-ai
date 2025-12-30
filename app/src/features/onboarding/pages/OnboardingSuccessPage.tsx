@@ -1,12 +1,49 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text as RNText } from "react-native";
+import Button from "../../../shared/ui/button";
+import { colors } from "../../../shared/constants/theme";
+import Text from "../../../shared/ui/text";
+import { useRouter } from "expo-router";
 
 export const OnboardingSuccessPage = () => {
+  const router = useRouter();
+
+  const handleContinue = () => {
+    // TODO: Navigate to the home screen
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.titleContainer}>
+          <RNText style={styles.title}>🎉</RNText>
+        </View>
+        <Text variant="h2" weight="bold">You're all set! ✅</Text>
+        <Text variant="body" weight="regular">Now start your practice to more likely get hired.</Text>
+      </View>
+      <Button onPress={handleContinue}>
+        <Text variant="body" weight="bold" color={colors.white}>Let's goooo!</Text>
+      </Button>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  content: {
+    justifyContent: 'center',
+    gap: 20
+  },
+  titleContainer: {
+    paddingVertical: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 128,
+    fontWeight: 'bold',
+  },
 });
 
