@@ -8,7 +8,7 @@ export const OnboardingSuccessPage = () => {
   const router = useRouter();
 
   const handleContinue = () => {
-    // TODO: Navigate to the home screen
+    router.push("/practice");
   };
 
   return (
