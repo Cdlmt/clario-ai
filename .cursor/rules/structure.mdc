@@ -1,0 +1,47 @@
+---
+alwaysApply: true
+---
+
+This project uses Expo Router with a feature-first architecture.
+
+Routing rules:
+
+- All routes MUST live in `src/app/`.
+- Files in `src/app/` are route wrappers ONLY.
+- Route files must only import and render a page from `src/features/`.
+- No business logic, state, or API calls are allowed in `src/app/`.
+
+Feature structure rules:
+
+- All application logic MUST live in `src/features/`.
+- Each feature MUST be organized by domain, not by technical type.
+- Each feature MAY contain:
+  - pages/
+  - components/
+  - services/
+  - hooks/
+  - models/
+
+Service rules:
+
+- Use `services/` (never `api/`) on the frontend.
+- Service files must be named with a verb and `.service.ts`.
+  Example: analyzeAnswer.service.ts
+- Services handle all external interactions (HTTP, LLM, storage, etc.).
+
+Shared code rules:
+
+- Shared, reusable code MUST live in `src/shared/`.
+- Features must not import pages or components from other features.
+- Cross-feature sharing is only allowed via `src/shared/`.
+
+Boundaries:
+
+- `src/app/` can import from `src/features/`.
+- `src/features/` must NEVER import from `src/app/`.
+
+Goal:
+
+- Keep routing thin.
+- Keep business logic inside features.
+- Favor clarity, explicitness, and long-term maintainability.
