@@ -3,23 +3,32 @@ import React from 'react'
 import { colors, gaps } from '../../../../shared/constants/theme'
 import Text from '../../../../shared/ui/text'
 import FeedbackScore from './feedback.score'
+import { WeakWord } from '../../models/feedback'
 
-export default function WeakWordsFeedback() {
+type WeakWordsFeedbackProps = {
+  rating: number;
+  words: WeakWord[];
+  comment: string;
+};
+
+export default function WeakWordsFeedback(props: WeakWordsFeedbackProps) {
+  const { rating, words, comment } = props;
+
   return (
     <View style={styles.container}>
       <Text variant="largeBody" weight="medium">Weak Words</Text>
       <View style={styles.content}>
-        <FeedbackScore score={75} />
+        <FeedbackScore score={rating} />
         <View style={styles.feedbackContainer}>
-          <Text variant="body" weight="medium">Your answer is understandable, but the main point comes a bit late.</Text>
+          <Text variant="body" weight="medium">{comment}</Text>
         </View>
       </View>
       <View style={styles.wordsContainer}>
         <Text variant="body" weight="bold">List of words</Text>
         <View style={styles.wordsList}>
-          <Text variant="body" weight="medium">Maybe (3x)</Text>
-          <Text variant="body" weight="medium">Actually (2x)</Text>
-          <Text variant="body" weight="medium">However (1x)</Text>
+          {words.map((word) => (
+            <Text variant="body" weight="medium" key={word.word}>{word.word} ({word.count}x)</Text>
+          ))}
         </View>
       </View>
     </View>

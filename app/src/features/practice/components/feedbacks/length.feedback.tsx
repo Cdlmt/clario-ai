@@ -4,24 +4,33 @@ import { colors, gaps } from '../../../../shared/constants/theme'
 import Text from '../../../../shared/ui/text'
 import FeedbackScore from './feedback.score'
 
-export default function LengthFeedback() {
+type LengthFeedbackProps = {
+  rating: number;
+  durationSeconds: number;
+  durationTargetSeconds: number;
+  comment: string;
+};
+
+export default function LengthFeedback(props: LengthFeedbackProps) {
+  const { rating, durationSeconds, durationTargetSeconds, comment } = props;
+
   return (
     <View style={styles.container}>
       <Text variant="largeBody" weight="medium">Length</Text>
       <View style={styles.content}>
-        <FeedbackScore score={75} />
+        <FeedbackScore score={rating} />
         <View style={styles.feedbackContainer}>
-          <Text variant="body" weight="medium">Your answer is understandable, but the main point comes a bit late.</Text>
+          <Text variant="body" weight="medium">{comment}</Text>
         </View>
       </View>
       <View style={styles.content}>
         <View style={styles.durationContainer}>
           <Text variant="body" weight="bold">Time ⏱️</Text>
-          <Text variant="body" weight="medium">124s</Text>
+          <Text variant="body" weight="medium">{durationSeconds}s</Text>
         </View>
         <View style={styles.durationContainer}>
           <Text variant="body" weight="bold">Target 🎯</Text>
-          <Text variant="body" weight="medium">60s-90s</Text>
+          <Text variant="body" weight="medium">{durationTargetSeconds}s</Text>
         </View>
       </View>
     </View>

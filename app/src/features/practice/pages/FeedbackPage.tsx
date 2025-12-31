@@ -11,12 +11,12 @@ import WeakWordsFeedback from '../components/feedbacks/weak.words.feedback'
 export default function FeedbackPage() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-      <ClarityFeedback />
-      <LengthFeedback />
-      <WeakWordsFeedback />
-      <KeySuggestionFeedback />
-      <ConcisenessFeedback />
-      <ConfidenceIndicatorFeedback />
+      <ClarityFeedback rating={89} comment="Your answer is understandable, but the main point comes a bit late." />
+      <LengthFeedback rating={50} durationSeconds={124} durationTargetSeconds={90} comment="Your answer is understandable, but the main point comes a bit late." />
+      <WeakWordsFeedback rating={18} words={[{ word: 'Actually', count: 2 }, { word: 'However', count: 1 }]} comment="Your answer is understandable, but the main point comes a bit late." />
+      <KeySuggestionFeedback suggestion="Use the word 'actually' instead of 'in fact' to make your answer more natural." />
+      <ConcisenessFeedback rating={28} comment="Your answer is too verbose. Try to be more concise and direct." />
+      <ConfidenceIndicatorFeedback rating={57} comment="Your answer is confident and clear, but you could improve your delivery." />
     </ScrollView>
   )
 }

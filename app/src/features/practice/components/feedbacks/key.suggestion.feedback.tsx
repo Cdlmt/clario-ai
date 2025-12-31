@@ -3,12 +3,18 @@ import React from 'react'
 import { colors, gaps } from '../../../../shared/constants/theme'
 import Text from '../../../../shared/ui/text'
 
-export default function KeySuggestionFeedback() {
+type KeySuggestionFeedbackProps = {
+  suggestion: string;
+};
+
+export default function KeySuggestionFeedback(props: KeySuggestionFeedbackProps) {
+  const { suggestion } = props;
+
   return (
     <View style={styles.container}>
       <Text variant="largeBody" weight="medium">Key Suggestion</Text>
       <View style={styles.feedbackContainer}>
-        <Text variant="body" weight="medium">Your answer is understandable, but the main point comes a bit late.</Text>
+        <Text variant="body" weight="medium">{suggestion}</Text>
       </View>
     </View>
   )

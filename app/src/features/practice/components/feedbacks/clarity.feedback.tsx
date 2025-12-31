@@ -4,14 +4,21 @@ import { colors, gaps } from '../../../../shared/constants/theme'
 import Text from '../../../../shared/ui/text'
 import FeedbackScore from './feedback.score'
 
-export default function ClarityFeedback() {
+type ClarityFeedbackProps = {
+  rating: number;
+  comment: string;
+};
+
+export default function ClarityFeedback(props: ClarityFeedbackProps) {
+  const { rating, comment } = props;
+
   return (
     <View style={styles.container}>
       <Text variant="largeBody" weight="medium">Clarity</Text>
       <View style={styles.content}>
-        <FeedbackScore score={75} />
+        <FeedbackScore score={rating} />
         <View style={styles.feedbackContainer}>
-          <Text variant="body" weight="medium">Your answer is understandable, but the main point comes a bit late.</Text>
+          <Text variant="body" weight="medium">{comment}</Text>
         </View>
       </View>
     </View>
