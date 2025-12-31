@@ -4,9 +4,15 @@ import { colors } from '../../../shared/constants/theme'
 import Text from '../../../shared/ui/text'
 import AnswerStopButton from '../components/answer.stop.button'
 import AudioWaveform from '../components/audio.waveform'
+import { useRouter } from 'expo-router'
 
 export default function AnswerPage() {
   const levels = useMemo(() => [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.5, 0.4, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.5, 0.5, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0,], [])
+  const router = useRouter();
+
+  const handleStop = () => {
+    router.push('/practice/analyzing')
+  }
 
   return (
     <View style={styles.container}>
@@ -14,7 +20,7 @@ export default function AnswerPage() {
         You can start speaking when ready..
       </Text>
       <AudioWaveform levels={levels} />
-      <AnswerStopButton onPress={() => { }} />
+      <AnswerStopButton onPress={handleStop} />
     </View>
   )
 }

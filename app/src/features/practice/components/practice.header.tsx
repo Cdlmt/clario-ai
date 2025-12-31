@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const STEPS_CONFIG = {
   "/practice": "Interview question",
   "/practice/answer": "Interview question",
-  "/practice/analysis": "Analyzing answer",
+  "/practice/analyzing": "Analyzing answer",
   "/practice/feedback": "Your feedback",
 } as const;
 
