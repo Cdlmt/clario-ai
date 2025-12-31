@@ -2,11 +2,15 @@ import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react
 import React from 'react'
 import { colors } from '../constants/theme';
 
-type ButtonProps = TouchableOpacityProps;
+type ButtonProps = TouchableOpacityProps & {
+  variant?: 'primary' | 'secondary';
+};
 
 export default function Button(props: ButtonProps) {
+  const { variant = 'primary', ...rest } = props;
+
   return (
-    <TouchableOpacity {...props} style={styles.container}>
+    <TouchableOpacity {...rest} style={[styles.container, variant === 'secondary' && { backgroundColor: colors.secondary }]}>
       {props.children}
     </TouchableOpacity>
   )

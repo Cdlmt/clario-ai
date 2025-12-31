@@ -4,11 +4,25 @@ import { colors, heights, paddings } from '../../../shared/constants/theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Button from '../../../shared/ui/button';
 import Text from '../../../shared/ui/text';
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
+
+const BUTTON_COLOR = {
+  "/practice": colors.secondary,
+  "/practice/feedback": colors.primary,
+}
+
+const BUTTON_TEXT = {
+  "/practice": "Start answering  🎙️️",
+  "/practice/feedback": "Next question ⚡️",
+}
 
 export default function PracticeBottomBar() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const buttonColor = BUTTON_COLOR[pathname as keyof typeof BUTTON_COLOR] ?? colors.primary;
+  const buttonText = BUTTON_TEXT[pathname as keyof typeof BUTTON_TEXT] ?? "Start answering  🎙️️";
 
   const handleStartAnswer = () => {
     router.push("/practice/answer");
@@ -16,8 +30,8 @@ export default function PracticeBottomBar() {
 
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom, height: heights.bottomBar + insets.bottom }]}>
-      <Button onPress={handleStartAnswer}>
-        <Text variant="body" weight="bold" color={colors.white}>Start answering  🎙️️</Text>
+      <Button onPress={handleStartAnswer} style={{ backgroundColor: buttonColor }}>
+        <Text variant="body" weight="bold" color={colors.white}>{buttonText}</Text>
       </Button>
     </View>
   )

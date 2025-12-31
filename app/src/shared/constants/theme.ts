@@ -8,6 +8,14 @@ export const colors = {
   darkGray: '#D0D0D0',
 };
 
+export const feedbackColors = {
+  bad: '#FF2727',
+  low: '#D8A000',
+  fair: '#4EFF3A',
+  good: '#34A853',
+  perfect: '#00641B',
+};
+
 export const paddings = {
   horizontal: 20,
   vertical: 20,

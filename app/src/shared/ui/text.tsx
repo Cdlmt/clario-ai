@@ -43,12 +43,12 @@ export default function Text({ variant = 'body', weight, style, color, ...props 
 
 const styles = StyleSheet.create<Record<TextVariant, TextStyle>>({
   h1: {
-    fontSize: 40,
+    fontSize: 32,
     fontWeight: '700',
     lineHeight: 48,
   },
   h2: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: '700',
     lineHeight: 40,
   },
@@ -63,32 +63,32 @@ const styles = StyleSheet.create<Record<TextVariant, TextStyle>>({
     lineHeight: 28,
   },
   largeBody: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '400',
     lineHeight: 26,
   },
   body: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '400',
     lineHeight: 24,
   },
   smallBody: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '400',
     lineHeight: 20,
   },
   largeText: {
-    fontSize: 16,
+    fontSize: 11,
     fontWeight: '500',
     lineHeight: 24,
   },
   text: {
-    fontSize: 14,
+    fontSize: 10,
     fontWeight: '500',
     lineHeight: 20,
   },
   smallText: {
-    fontSize: 12,
+    fontSize: 8,
     fontWeight: '500',
     lineHeight: 16,
   },

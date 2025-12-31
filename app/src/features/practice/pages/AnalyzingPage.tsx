@@ -2,11 +2,18 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Text from '../../../shared/ui/text'
 import { colors, gaps } from '../../../shared/constants/theme'
+import { useRouter } from 'expo-router';
 
 export default function AnalyzingPage() {
   const [timeSpent, setTimeSpent] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
+    if (timeSpent >= 15) {
+      router.push("/practice/feedback");
+      return;
+    }
+
     const interval = setInterval(() => {
       setTimeSpent(timeSpent + 1);
     }, 1000);
