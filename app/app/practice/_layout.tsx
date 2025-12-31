@@ -1,5 +1,10 @@
-import { Stack } from 'expo-router'
+import { Stack } from 'expo-router';
+import { PracticeSessionProvider } from '../../src/features/practice/context/PracticeSessionContext';
 
 export default function PracticeLayout() {
-  return <Stack screenOptions={{ headerShown: false }} />
+  return (
+    <PracticeSessionProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </PracticeSessionProvider>
+  );
 }

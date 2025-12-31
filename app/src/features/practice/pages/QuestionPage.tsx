@@ -1,27 +1,46 @@
-import { StyleSheet, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import Text from '../../../shared/ui/text'
-import { gaps, heights } from '../../../shared/constants/theme'
-import ProgressBar from '../components/progress.bar'
-import { useRouter } from 'expo-router'
+import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Text from '../../../shared/ui/text';
+import { gaps, heights } from '../../../shared/constants/theme';
+import ProgressBar from '../components/progress.bar';
+import { useRouter } from 'expo-router';
+import { usePracticeSessionContext } from '../context/PracticeSessionContext';
+import { createQuestion } from '../models/question';
 
-const initialTimer = 30;
+const INITIAL_TIMER = 30;
+const DEFAULT_QUESTION =
+  'Tell me about a technical challenge you recently faced and how you solved it.';
 
 export default function QuestionPage() {
   const router = useRouter();
-  const [timeLeft, setTimeLeft] = useState(initialTimer);
+  const { session, startSession } = usePracticeSessionContext();
+  const [timeLeft, setTimeLeft] = useState(INITIAL_TIMER);
+
+  // Initialize session with a question if not already set
+  useEffect(() => {
+    if (session.status === 'idle') {
+      const question = createQuestion(DEFAULT_QUESTION, 'Technical');
+      startSession(question);
+    }
+  }, [session.status, startSession]);
+
+  const currentQuestion =
+    session.status !== 'idle' && 'question' in session
+      ? session.question?.text
+      : DEFAULT_QUESTION;
 
   const handleStartAnswer = () => {
-    router.push("/practice/answer");
-  }
+    router.push('/practice/answer');
+  };
 
   useEffect(() => {
     if (timeLeft <= 0) {
+      handleStartAnswer();
       return;
     }
 
     const interval = setInterval(() => {
-      setTimeLeft(timeLeft - 1);
+      setTimeLeft((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(interval);
@@ -31,16 +50,22 @@ export default function QuestionPage() {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.questionContainer}>
-          <Text variant="h1" weight="bold">"Tell me about a technical challenge you recently faced and how you solved it."</Text>
-          <Text variant="body" weight="medium">Take a few seconds to think before answering.</Text>
+          <Text variant="h1" weight="bold">
+            "{currentQuestion}"
+          </Text>
+          <Text variant="body" weight="medium">
+            Take a few seconds to think before answering.
+          </Text>
         </View>
         <View style={styles.progressBarContainer}>
-          <Text variant="h1" weight="bold">⏳ {timeLeft}s..</Text>
-          <ProgressBar initialTimer={initialTimer} />
+          <Text variant="h1" weight="bold">
+            ⏳ {timeLeft}s..
+          </Text>
+          <ProgressBar initialTimer={INITIAL_TIMER} />
         </View>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -62,4 +87,4 @@ const styles = StyleSheet.create({
     gap: gaps.inner,
     alignItems: 'center',
   },
-})
+});

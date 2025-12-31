@@ -1,49 +1,82 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import Text from '../../../shared/ui/text'
-import { colors, gaps } from '../../../shared/constants/theme'
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Text from '../../../shared/ui/text';
+import { colors, gaps } from '../../../shared/constants/theme';
+import { usePracticeSessionContext } from '../context/PracticeSessionContext';
 import { useRouter } from 'expo-router';
 
 export default function AnalyzingPage() {
   const [timeSpent, setTimeSpent] = useState(0);
+  const { session } = usePracticeSessionContext();
   const router = useRouter();
 
+  // Navigate to feedback when analysis is complete
   useEffect(() => {
-    if (timeSpent >= 15) {
-      router.push("/practice/feedback");
-      return;
+    if (session.status === 'feedback') {
+      router.replace('/practice/feedback');
+    } else if (session.status === 'error') {
+      router.replace('/practice/feedback');
     }
+  }, [session.status, router]);
 
+  // Animate the progress indicators
+  useEffect(() => {
     const interval = setInterval(() => {
-      setTimeSpent(timeSpent + 1);
+      setTimeSpent((prev) => prev + 1);
     }, 1000);
+
     return () => clearInterval(interval);
-  }, [timeSpent]);
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
-        <Text variant="h1" weight="bold" color={colors.white} style={styles.text}>
+        <Text
+          variant="h1"
+          weight="bold"
+          color={colors.white}
+          style={styles.text}
+        >
           We're processing your answer...
         </Text>
-        <Text variant="largeBody" weight="medium" color={colors.white} style={styles.text}>
+        <Text
+          variant="largeBody"
+          weight="medium"
+          color={colors.white}
+          style={styles.text}
+        >
           This usually takes a few seconds
         </Text>
       </View>
       <ActivityIndicator size="large" color={colors.white} />
       <View style={styles.activityTextContainer}>
-        <Text variant="largeBody" weight="medium" color={colors.white} style={styles.text}>
+        <Text
+          variant="largeBody"
+          weight="medium"
+          color={colors.white}
+          style={styles.text}
+        >
           Reviewing clarity, length and language.
         </Text>
-        <Text variant="largeBody" weight="medium" color={timeSpent > 5 ? colors.white : colors.darkGray} style={styles.text}>
+        <Text
+          variant="largeBody"
+          weight="medium"
+          color={timeSpent > 2 ? colors.white : colors.darkGray}
+          style={styles.text}
+        >
           Analyzing structure and wording.
         </Text>
-        <Text variant="largeBody" weight="medium" color={timeSpent > 10 ? colors.white : colors.darkGray} style={styles.text}>
+        <Text
+          variant="largeBody"
+          weight="medium"
+          color={timeSpent > 4 ? colors.white : colors.darkGray}
+          style={styles.text}
+        >
           Evaluating coherence and conciseness.
         </Text>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -63,4 +96,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-})
+});

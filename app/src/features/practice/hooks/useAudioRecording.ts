@@ -1,19 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Audio } from 'expo-av';
+import { useAudioRecorder, AudioModule, RecordingPresets } from 'expo-audio';
 
 const LEVEL_HISTORY_SIZE = 32;
-const METERING_INTERVAL = 50;
 
 type UseAudioRecordingReturn = {
   isRecording: boolean;
   levels: number[];
   startRecording: () => Promise<void>;
-  stopRecording: () => Promise<string | null>;
+  stopRecording: () => Promise<string>;
 };
 
 function normalizeDecibels(db: number): number {
-  // Metering typically returns values between -160 (silence) and 0 (max)
-  // We normalize to 0-1 range
   const minDb = -60;
   const maxDb = 0;
   const clamped = Math.max(minDb, Math.min(maxDb, db));
@@ -25,94 +22,60 @@ export function useAudioRecording(): UseAudioRecordingReturn {
   const [levels, setLevels] = useState<number[]>(
     Array(LEVEL_HISTORY_SIZE).fill(0)
   );
-  const recordingRef = useRef<Audio.Recording | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const hasPermissionRef = useRef(false);
+  const uriRef = useRef<string>('');
 
-  const updateLevels = useCallback(async () => {
-    if (!recordingRef.current) return;
-
-    try {
-      const status = await recordingRef.current.getStatusAsync();
-      if (status.isRecording && status.metering !== undefined) {
-        const normalizedLevel = normalizeDecibels(status.metering);
-        setLevels((prev) => {
-          const newLevels = [...prev.slice(1), normalizedLevel];
-          return newLevels;
-        });
+  const audioRecorder = useAudioRecorder(
+    {
+      ...RecordingPresets.HIGH_QUALITY,
+      isMeteringEnabled: true,
+    },
+    (status) => {
+      // Access metering value from status object
+      const statusWithMetering = status as { metering?: number };
+      if (isRecording && typeof statusWithMetering.metering === 'number') {
+        const normalizedLevel = normalizeDecibels(statusWithMetering.metering);
+        setLevels((prev) => [...prev.slice(1), normalizedLevel]);
       }
-    } catch {
-      // Recording might have stopped
     }
-  }, []);
+  );
 
   const startRecording = useCallback(async () => {
-    try {
-      const { status } = await Audio.requestPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access microphone was denied');
-        return;
+    if (!hasPermissionRef.current) {
+      const status = await AudioModule.requestRecordingPermissionsAsync();
+      if (!status.granted) {
+        throw new Error('Permission to access microphone was denied');
       }
-
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-
-      const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync({
-        ...Audio.RecordingOptionsPresets.HIGH_QUALITY,
-        isMeteringEnabled: true,
-      });
-      await recording.startAsync();
-
-      recordingRef.current = recording;
-      setIsRecording(true);
-      setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
-
-      intervalRef.current = setInterval(updateLevels, METERING_INTERVAL);
-    } catch (error) {
-      console.error('Failed to start recording:', error);
-    }
-  }, [updateLevels]);
-
-  const stopRecording = useCallback(async (): Promise<string | null> => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+      hasPermissionRef.current = true;
     }
 
-    if (!recordingRef.current) {
-      return null;
+    setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
+    audioRecorder.record();
+    setIsRecording(true);
+  }, [audioRecorder]);
+
+  const stopRecording = useCallback(async (): Promise<string> => {
+    await audioRecorder.stop();
+    setIsRecording(false);
+    setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
+
+    const uri = audioRecorder.uri ?? '';
+    uriRef.current = uri;
+
+    if (!uri) {
+      throw new Error('No audio URI available');
     }
 
-    try {
-      await recordingRef.current.stopAndUnloadAsync();
-      const uri = recordingRef.current.getURI();
-      recordingRef.current = null;
-      setIsRecording(false);
-      setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
-
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-      });
-
-      return uri;
-    } catch (error) {
-      console.error('Failed to stop recording:', error);
-      return null;
-    }
-  }, []);
+    return uri;
+  }, [audioRecorder]);
 
   useEffect(() => {
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      if (recordingRef.current) {
-        recordingRef.current.stopAndUnloadAsync();
+      if (audioRecorder.isRecording) {
+        audioRecorder.stop();
       }
     };
-  }, []);
+  }, [audioRecorder]);
 
   return {
     isRecording,

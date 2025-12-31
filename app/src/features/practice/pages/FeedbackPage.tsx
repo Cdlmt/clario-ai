@@ -1,24 +1,77 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import ClarityFeedback from '../components/feedbacks/clarity.feedback'
-import { gaps, heights } from '../../../shared/constants/theme'
-import ConcisenessFeedback from '../components/feedbacks/conciseness.feedback'
-import ConfidenceIndicatorFeedback from '../components/feedbacks/confidence.indicator.feedback'
-import KeySuggestionFeedback from '../components/feedbacks/key.suggestion.feedback'
-import LengthFeedback from '../components/feedbacks/length.feedback'
-import WeakWordsFeedback from '../components/feedbacks/weak.words.feedback'
+import { ScrollView, StyleSheet, View } from 'react-native';
+import React from 'react';
+import ClarityFeedback from '../components/feedbacks/clarity.feedback';
+import { colors, gaps, heights } from '../../../shared/constants/theme';
+import ConcisenessFeedback from '../components/feedbacks/conciseness.feedback';
+import ConfidenceIndicatorFeedback from '../components/feedbacks/confidence.indicator.feedback';
+import KeySuggestionFeedback from '../components/feedbacks/key.suggestion.feedback';
+import LengthFeedback from '../components/feedbacks/length.feedback';
+import WeakWordsFeedback from '../components/feedbacks/weak.words.feedback';
+import { usePracticeSessionContext } from '../context/PracticeSessionContext';
+import Text from '../../../shared/ui/text';
 
 export default function FeedbackPage() {
+  const { session } = usePracticeSessionContext();
+
+  // Handle error state
+  if (session.status === 'error') {
+    return (
+      <View style={styles.errorContainer}>
+        <Text variant="h1" weight="bold" color={colors.white}>
+          Oops!
+        </Text>
+        <Text variant="body" weight="medium" color={colors.white}>
+          {session.errorMessage}
+        </Text>
+      </View>
+    );
+  }
+
+  // Handle loading/processing state
+  if (session.status !== 'feedback') {
+    return (
+      <View style={styles.errorContainer}>
+        <Text variant="body" weight="medium" color={colors.white}>
+          Loading feedback...
+        </Text>
+      </View>
+    );
+  }
+
+  const { feedback } = session;
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-      <ClarityFeedback rating={89} comment="Your answer is understandable, but the main point comes a bit late." />
-      <LengthFeedback rating={50} durationSeconds={124} durationTargetSeconds={90} comment="Your answer is understandable, but the main point comes a bit late." />
-      <WeakWordsFeedback rating={18} words={[{ word: 'Actually', count: 2 }, { word: 'However', count: 1 }]} comment="Your answer is understandable, but the main point comes a bit late." />
-      <KeySuggestionFeedback suggestion="Use the word 'actually' instead of 'in fact' to make your answer more natural." />
-      <ConcisenessFeedback rating={28} comment="Your answer is too verbose. Try to be more concise and direct." />
-      <ConfidenceIndicatorFeedback rating={57} comment="Your answer is confident and clear, but you could improve your delivery." />
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+    >
+      <ClarityFeedback
+        rating={feedback.clarity.rating}
+        comment={feedback.clarity.comment}
+      />
+      <LengthFeedback
+        rating={feedback.length.rating}
+        durationSeconds={feedback.length.durationSeconds}
+        durationTargetSeconds={feedback.length.durationTargetSeconds}
+        comment={feedback.length.comment}
+      />
+      <WeakWordsFeedback
+        rating={feedback.weak_words.rating}
+        words={feedback.weak_words.words}
+        comment="Minimize filler words to sound more confident."
+      />
+      <KeySuggestionFeedback suggestion={feedback.key_suggestion} />
+      <ConcisenessFeedback
+        rating={feedback.conciseness.rating}
+        comment={feedback.conciseness.comment}
+      />
+      <ConfidenceIndicatorFeedback
+        rating={feedback.confidence_indicator.rating}
+        comment={feedback.confidence_indicator.comment}
+      />
     </ScrollView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -28,5 +81,12 @@ const styles = StyleSheet.create({
   contentContainer: {
     gap: gaps.default,
     paddingBottom: heights.bottomBar + 10,
-  }
-})
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: gaps.default,
+    padding: 20,
+  },
+});
