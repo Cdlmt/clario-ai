@@ -1,8 +1,8 @@
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, paddings } from "../../../shared/constants/theme";
 import PracticeHeader from "./practice.header";
-import PracticeBottomBar from "./practice.bottombar";
 
 type PracticeAnswerLayoutProps = {
   children: React.ReactNode;

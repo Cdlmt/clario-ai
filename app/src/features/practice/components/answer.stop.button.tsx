@@ -3,9 +3,13 @@ import React from 'react'
 import Text from '../../../shared/ui/text'
 import { colors } from '../../../shared/constants/theme'
 
-export default function AnswerStopButton() {
+type AnswerStopButtonProps = {
+  onPress?: () => void
+}
+
+export default function AnswerStopButton({ onPress }: AnswerStopButtonProps) {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.content}>
         <Text variant="body" weight="bold" color={colors.white}>STOP</Text>
       </View>
