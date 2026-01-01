@@ -1,3 +1,4 @@
+import { generateId } from '../../../shared/utils/generateId';
 import { Feedback } from './feedback';
 import { Question } from './question';
 
@@ -67,7 +68,7 @@ export type PracticeSession =
 
 export function createIdleSession(): IdleSession {
   return {
-    id: crypto.randomUUID(),
+    id: generateId(),
     status: 'idle',
     startedAt: Date.now(),
   };

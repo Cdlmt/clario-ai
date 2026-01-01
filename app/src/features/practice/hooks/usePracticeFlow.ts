@@ -6,6 +6,7 @@ import { transcribeAudio } from '../services/transcribeAudio.service';
 import { analyzeAnswer } from '../services/analyzeAnswer.service';
 import { createQuestion, Question } from '../models/question';
 import { Feedback } from '../models/feedback';
+import { generateId } from '../../../shared/utils/generateId';
 
 type UsePracticeFlowReturn = {
   isRecording: boolean;
@@ -108,7 +109,7 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
       });
 
       const feedback: Feedback = {
-        id: crypto.randomUUID(),
+        id: generateId(),
         ...analysisResult,
         createdAt: Date.now(),
       };
