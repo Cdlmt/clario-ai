@@ -46,6 +46,7 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setLocalError] = useState<string | null>(null);
   const recordingStartTimeRef = useRef<number>(0);
+  const hasBegunRecordingRef = useRef(false);
 
   const currentQuestion = getQuestionFromSession(
     session as { status: string; question?: Question }
@@ -61,22 +62,31 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
   );
 
   const beginRecording = useCallback(async () => {
+    // Prevent multiple recording starts
+    if (hasBegunRecordingRef.current || isRecording) {
+      return;
+    }
+
+    hasBegunRecordingRef.current = true;
     setLocalError(null);
+
     try {
       await startRecording();
       markRecordingStarted();
       recordingStartTimeRef.current = Date.now();
     } catch (err) {
+      hasBegunRecordingRef.current = false;
       const message =
         err instanceof Error ? err.message : 'Failed to start recording';
       setLocalError(message);
       setError(message);
     }
-  }, [startRecording, markRecordingStarted, setError]);
+  }, [startRecording, markRecordingStarted, setError, isRecording]);
 
   const finishRecording = useCallback(async () => {
     setLocalError(null);
     setIsLoading(true);
+    hasBegunRecordingRef.current = false;
 
     try {
       const audioUri = await stopRecording();

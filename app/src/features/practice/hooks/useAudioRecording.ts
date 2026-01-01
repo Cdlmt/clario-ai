@@ -24,6 +24,7 @@ export function useAudioRecording(): UseAudioRecordingReturn {
   );
   const hasPermissionRef = useRef(false);
   const uriRef = useRef<string>('');
+  const isStartingRef = useRef(false);
 
   const audioRecorder = useAudioRecorder(
     {
@@ -31,7 +32,6 @@ export function useAudioRecording(): UseAudioRecordingReturn {
       isMeteringEnabled: true,
     },
     (status) => {
-      // Access metering value from status object
       const statusWithMetering = status as { metering?: number };
       if (isRecording && typeof statusWithMetering.metering === 'number') {
         const normalizedLevel = normalizeDecibels(statusWithMetering.metering);
@@ -41,20 +41,40 @@ export function useAudioRecording(): UseAudioRecordingReturn {
   );
 
   const startRecording = useCallback(async () => {
-    if (!hasPermissionRef.current) {
-      const status = await AudioModule.requestRecordingPermissionsAsync();
-      if (!status.granted) {
-        throw new Error('Permission to access microphone was denied');
-      }
-      hasPermissionRef.current = true;
+    // Prevent concurrent start attempts
+    if (isStartingRef.current || audioRecorder.isRecording) {
+      return;
     }
 
-    setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
-    audioRecorder.record();
-    setIsRecording(true);
+    isStartingRef.current = true;
+
+    try {
+      if (!hasPermissionRef.current) {
+        const status = await AudioModule.requestRecordingPermissionsAsync();
+        if (!status.granted) {
+          throw new Error('Permission to access microphone was denied');
+        }
+        hasPermissionRef.current = true;
+      }
+
+      setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
+      audioRecorder.record();
+      setIsRecording(true);
+    } finally {
+      isStartingRef.current = false;
+    }
   }, [audioRecorder]);
 
   const stopRecording = useCallback(async (): Promise<string> => {
+    // Only stop if actually recording
+    if (!audioRecorder.isRecording) {
+      const uri = uriRef.current;
+      if (!uri) {
+        throw new Error('No audio URI available');
+      }
+      return uri;
+    }
+
     await audioRecorder.stop();
     setIsRecording(false);
     setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
@@ -71,8 +91,12 @@ export function useAudioRecording(): UseAudioRecordingReturn {
 
   useEffect(() => {
     return () => {
-      if (audioRecorder.isRecording) {
-        audioRecorder.stop();
+      try {
+        if (audioRecorder.isRecording) {
+          audioRecorder.stop();
+        }
+      } catch {
+        // Ignore cleanup errors when component unmounts
       }
     };
   }, [audioRecorder]);

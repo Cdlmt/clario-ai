@@ -13,11 +13,18 @@ export default function AnswerPage() {
   const hasStartedRef = useRef(false);
 
   useEffect(() => {
-    if (!hasStartedRef.current) {
-      hasStartedRef.current = true;
-      beginRecording();
+    if (hasStartedRef.current) {
+      return;
     }
-  }, [beginRecording]);
+    hasStartedRef.current = true;
+
+    // Small delay to ensure audio module is ready
+    const timer = setTimeout(() => {
+      beginRecording();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <View style={styles.container}>
