@@ -4,23 +4,27 @@
     "slug": "clario-ai-interview-coach",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./src/shared/assets/logo.png",
     "scheme": "clario",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./src/shared/assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#8B5CF6"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.clario.interviewcoach"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./src/shared/assets/logo.png",
+        "backgroundColor": "#8B5CF6"
       },
       "package": "com.clario.interviewcoach"
     },
-    "plugins": [
-      "expo-router",
-      "expo-audio"
-    ],
+    "plugins": ["expo-router", "expo-audio"],
     "extra": {
       "router": {},
       "eas": {
