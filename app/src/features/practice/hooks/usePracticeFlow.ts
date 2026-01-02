@@ -83,10 +83,58 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
     }
   }, [startRecording, markRecordingStarted, setError, isRecording]);
 
-  const analyzeRecording = useCallback(async () => {
-    try {
-      const audioUri = await stopRecording();
+  const processRecording = useCallback(
+    async (audioUri: string, durationSeconds: number) => {
+      try {
+        const question = getQuestionFromSession(
+          session as { status: string; question?: Question }
+        );
 
+        if (!question) {
+          throw new Error('No question found');
+        }
+
+        // Transcribe the audio
+        const { transcript } = await transcribeAudio(audioUri);
+        setTranscript(transcript);
+
+        // Analyze the answer
+        const analysisResult = await analyzeAnswer({
+          question: question.text,
+          transcript,
+          durationSeconds,
+        });
+
+        const feedback: Feedback = {
+          id: generateId(),
+          ...analysisResult,
+          createdAt: Date.now(),
+        };
+
+        setFeedback(feedback);
+
+        router.replace('/practice/feedback');
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : 'An error occurred';
+        setLocalError(message);
+        setError(message);
+        router.replace('/practice/feedback');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setTranscript, setFeedback, setError, session, router]
+  );
+
+  const finishRecording = useCallback(async () => {
+    setLocalError(null);
+    setIsLoading(true);
+    hasBegunRecordingRef.current = false;
+
+    try {
+      // Stop recording BEFORE navigating to preserve the audio URI
+      const audioUri = await stopRecording();
       const durationSeconds = Math.max(
         1,
         Math.round((Date.now() - recordingStartTimeRef.current) / 1000)
@@ -94,67 +142,22 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
 
       markRecordingStopped({ uri: audioUri, durationSeconds });
 
-      const question = getQuestionFromSession(
-        session as { status: string; question?: Question }
-      );
+      // Navigate to analyzing page
+      router.push('/practice/analyzing');
 
-      if (!question) {
-        throw new Error('No question found');
-      }
+      // Small delay for UX before processing
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Transcribe the audio
-      const { transcript } = await transcribeAudio(audioUri);
-      setTranscript(transcript);
-
-      // Analyze the answer
-      const analysisResult = await analyzeAnswer({
-        question: question.text,
-        transcript,
-        durationSeconds,
-      });
-
-      const feedback: Feedback = {
-        id: generateId(),
-        ...analysisResult,
-        createdAt: Date.now(),
-      };
-
-      setFeedback(feedback);
-
-      router.replace('/practice/feedback');
+      // Process the recording
+      await processRecording(audioUri, durationSeconds);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An error occurred';
       setLocalError(message);
       setError(message);
-      router.replace('/practice/feedback');
-    } finally {
       setIsLoading(false);
+      router.replace('/practice/feedback');
     }
-  }, [
-    stopRecording,
-    markRecordingStopped,
-    setTranscript,
-    setFeedback,
-    setError,
-    session,
-    router,
-  ]);
-
-  const navigateToAnalyzing = useCallback(async () => {
-    router.push('/practice/analyzing');
-  }, [router]);
-
-  const finishRecording = useCallback(async () => {
-    setLocalError(null);
-    setIsLoading(true);
-    hasBegunRecordingRef.current = false;
-    await navigateToAnalyzing();
-
-    // Letting user see analyzing page for UX reasons
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    await analyzeRecording();
-  }, [navigateToAnalyzing, analyzeRecording]);
+  }, [stopRecording, markRecordingStopped, processRecording, router, setError]);
 
   return {
     isRecording,
