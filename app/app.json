@@ -15,16 +15,26 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.clario.interviewcoach"
+      "bundleIdentifier": "com.clario.interviewcoach",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/shared/assets/logo.png",
         "backgroundColor": "#8B5CF6"
       },
-      "package": "com.clario.interviewcoach"
+      "package": "com.clario.interviewcoach",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
-    "plugins": ["expo-router", "expo-audio"],
+    "plugins": [
+      "expo-router",
+      "expo-audio"
+    ],
     "extra": {
       "router": {},
       "eas": {

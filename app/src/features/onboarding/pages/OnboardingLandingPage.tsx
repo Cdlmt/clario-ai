@@ -1,17 +1,13 @@
 import { View, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
 import Button from "../../../shared/ui/button";
 import Text from "../../../shared/ui/text";
 import { colors, paddings } from "../../../shared/constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useOnboarding } from "../hooks/useOnboarding";
 
 export const OnboardingLandingPage = () => {
-  const router = useRouter();
   const insets = useSafeAreaInsets();
-
-  const handleGetStarted = () => {
-    router.push("/(onboarding)/(steps)/name");
-  };
+  const { goToNameStep } = useOnboarding();
 
   return (
     <View style={styles.container}>
@@ -27,7 +23,7 @@ export const OnboardingLandingPage = () => {
           Begin to train on what really matters, what companies really ask you ✅
         </Text>
 
-        <Button onPress={handleGetStarted}>
+        <Button onPress={goToNameStep}>
           <Text variant="body" weight="bold" color={colors.white}>Get started!</Text>
         </Button>
       </View>

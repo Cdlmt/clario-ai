@@ -2,14 +2,10 @@ import { StyleSheet, View, Text as RNText } from "react-native";
 import Button from "../../../shared/ui/button";
 import { colors, paddings } from "../../../shared/constants/theme";
 import Text from "../../../shared/ui/text";
-import { useRouter } from "expo-router";
+import { useOnboarding } from "../hooks/useOnboarding";
 
 export const OnboardingErrorPage = () => {
-  const router = useRouter();
-
-  const handleContinue = () => {
-    router.push("/(onboarding)/(steps)/signup");
-  };
+  const { handleRetry, error } = useOnboarding();
 
   return (
     <View style={styles.container}>
@@ -18,9 +14,11 @@ export const OnboardingErrorPage = () => {
           <RNText style={styles.title}>🛑</RNText>
         </View>
         <Text variant="h2" weight="bold">Oops! Something went wrong. ⁉️</Text>
-        <Text variant="body" weight="regular">Please try again.</Text>
+        <Text variant="body" weight="regular">
+          {error || 'Please try again.'}
+        </Text>
       </View>
-      <Button onPress={handleContinue}>
+      <Button onPress={handleRetry}>
         <Text variant="body" weight="bold" color={colors.white}>Try again</Text>
       </Button>
     </View>
@@ -47,4 +45,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

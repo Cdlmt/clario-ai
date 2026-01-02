@@ -1,5 +1,4 @@
-import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { colors } from '../constants/theme';
 
 type ButtonProps = TouchableOpacityProps & {
@@ -7,10 +6,18 @@ type ButtonProps = TouchableOpacityProps & {
 };
 
 export default function Button(props: ButtonProps) {
-  const { variant = 'primary', ...rest } = props;
+  const { variant = 'primary', disabled, ...rest } = props;
 
   return (
-    <TouchableOpacity {...rest} style={[styles.container, variant === 'secondary' && { backgroundColor: colors.secondary }]}>
+    <TouchableOpacity
+      {...rest}
+      disabled={disabled}
+      style={[
+        styles.container,
+        variant === 'secondary' && styles.secondary,
+        disabled && styles.disabled
+      ]}
+    >
       {props.children}
     </TouchableOpacity>
   )
@@ -25,5 +32,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.primary,
     paddingVertical: 8,
-  }
+  },
+  secondary: {
+    backgroundColor: colors.secondary,
+  },
+  disabled: {
+    opacity: 0.5,
+  },
 })

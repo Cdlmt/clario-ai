@@ -2,14 +2,10 @@ import { StyleSheet, View, Text as RNText } from "react-native";
 import Button from "../../../shared/ui/button";
 import { colors, paddings } from "../../../shared/constants/theme";
 import Text from "../../../shared/ui/text";
-import { useRouter } from "expo-router";
+import { useOnboarding } from "../hooks/useOnboarding";
 
 export const OnboardingSuccessPage = () => {
-  const router = useRouter();
-
-  const handleContinue = () => {
-    router.push("/practice");
-  };
+  const { handleSuccess } = useOnboarding();
 
   return (
     <View style={styles.container}>
@@ -20,7 +16,7 @@ export const OnboardingSuccessPage = () => {
         <Text variant="h2" weight="bold">You're all set! ✅</Text>
         <Text variant="body" weight="regular">Now start your practice to more likely get hired.</Text>
       </View>
-      <Button onPress={handleContinue}>
+      <Button onPress={handleSuccess}>
         <Text variant="body" weight="bold" color={colors.white}>Let's goooo!</Text>
       </Button>
     </View>
@@ -47,4 +43,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
