@@ -17,10 +17,10 @@ export default function FeedbackPage() {
   if (session.status === 'error') {
     return (
       <View style={styles.errorContainer}>
-        <Text variant="h1" weight="bold" color={colors.white}>
+        <Text variant="h1" weight="bold" color={colors.black}>
           Oops!
         </Text>
-        <Text variant="body" weight="medium" color={colors.white}>
+        <Text variant="body" weight="medium" color={colors.black}>
           {session.errorMessage}
         </Text>
       </View>
@@ -31,7 +31,7 @@ export default function FeedbackPage() {
   if (session.status !== 'feedback') {
     return (
       <View style={styles.errorContainer}>
-        <Text variant="body" weight="medium" color={colors.white}>
+        <Text variant="body" weight="medium" color={colors.black}>
           Loading feedback...
         </Text>
       </View>
@@ -59,7 +59,7 @@ export default function FeedbackPage() {
       <WeakWordsFeedback
         rating={feedback.weak_words.rating}
         words={feedback.weak_words.words}
-        comment="Minimize filler words to sound more confident."
+        comment={feedback.weak_words.comment}
       />
       <KeySuggestionFeedback suggestion={feedback.key_suggestion} />
       <ConcisenessFeedback

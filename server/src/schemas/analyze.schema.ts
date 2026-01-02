@@ -30,6 +30,7 @@ export const analyzeResponseSchema = z.object({
         count: z.number(),
       })
     ),
+    comment: z.string(),
   }),
   key_suggestion: z.string(),
   conciseness: z.object({

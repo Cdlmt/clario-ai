@@ -22,6 +22,7 @@ export type WeakWord = {
 export type WeakWordFeedback = {
   rating: number;
   words: WeakWord[];
+  comment: string;
 };
 
 export type ConcisenessFeedback = {

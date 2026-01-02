@@ -83,11 +83,7 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
     }
   }, [startRecording, markRecordingStarted, setError, isRecording]);
 
-  const finishRecording = useCallback(async () => {
-    setLocalError(null);
-    setIsLoading(true);
-    hasBegunRecordingRef.current = false;
-
+  const analyzeRecording = useCallback(async () => {
     try {
       const audioUri = await stopRecording();
 
@@ -97,7 +93,6 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
       );
 
       markRecordingStopped({ uri: audioUri, durationSeconds });
-      router.push('/practice/analyzing');
 
       const question = getQuestionFromSession(
         session as { status: string; question?: Question }
@@ -125,6 +120,7 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
       };
 
       setFeedback(feedback);
+
       router.replace('/practice/feedback');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An error occurred';
@@ -143,6 +139,22 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
     session,
     router,
   ]);
+
+  const navigateToAnalyzing = useCallback(async () => {
+    router.push('/practice/analyzing');
+  }, [router]);
+
+  const finishRecording = useCallback(async () => {
+    setLocalError(null);
+    setIsLoading(true);
+    hasBegunRecordingRef.current = false;
+    await navigateToAnalyzing();
+
+    // Letting user see analyzing page for UX reasons
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await analyzeRecording();
+  }, [navigateToAnalyzing, analyzeRecording]);
 
   return {
     isRecording,

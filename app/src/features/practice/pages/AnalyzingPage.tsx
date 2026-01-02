@@ -2,22 +2,9 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Text from '../../../shared/ui/text';
 import { colors, gaps } from '../../../shared/constants/theme';
-import { usePracticeSessionContext } from '../context/PracticeSessionContext';
-import { useRouter } from 'expo-router';
 
 export default function AnalyzingPage() {
   const [timeSpent, setTimeSpent] = useState(0);
-  const { session } = usePracticeSessionContext();
-  const router = useRouter();
-
-  // Navigate to feedback when analysis is complete
-  useEffect(() => {
-    if (session.status === 'feedback') {
-      router.replace('/practice/feedback');
-    } else if (session.status === 'error') {
-      router.replace('/practice/feedback');
-    }
-  }, [session.status, router]);
 
   // Animate the progress indicators
   useEffect(() => {

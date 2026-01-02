@@ -148,11 +148,13 @@ router.post('/', async (req: Request, res: Response) => {
       weak_words: {
         rating: weakWordsRating,
         words: weakWords,
+        comment:
+          weakWords.length > 2
+            ? `You use too many filler words. Reduce them to sound more confident. For example, instead of saying "um" or "like", try to be more direct and concise.`
+            : 'You use a few filler words. Try to reduce them to sound more confident.',
       },
       key_suggestion:
-        weakWords.length > 2
-          ? `Reduce filler words like "${weakWords[0]?.word}" to sound more confident and professional.`
-          : 'Consider using the STAR method (Situation, Task, Action, Result) to structure your answers.',
+        'Consider using the STAR method (Situation, Task, Action, Result) to structure your answers.',
       conciseness: {
         rating: Math.round(concisenessRating),
         comment:
