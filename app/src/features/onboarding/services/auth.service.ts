@@ -1,6 +1,5 @@
 import { supabase } from '../../../shared/lib/supabase';
 import * as WebBrowser from 'expo-web-browser';
-import * as AuthSession from 'expo-auth-session';
 import { makeRedirectUri } from 'expo-auth-session';
 
 export type SocialProvider = 'google' | 'apple' | 'facebook';
