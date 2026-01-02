@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Text from '../../../shared/ui/text';
 import { gaps, heights } from '../../../shared/constants/theme';
 import ProgressBar from '../components/progress.bar';
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 import { usePracticeSessionContext } from '../context/PracticeSessionContext';
 import { createQuestion } from '../models/question';
 
@@ -12,6 +12,7 @@ const DEFAULT_QUESTION =
   'Tell me about a technical challenge you recently faced and how you solved it.';
 
 export default function QuestionPage() {
+  const pathname = usePathname();
   const router = useRouter();
   const { session, startSession } = usePracticeSessionContext();
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIMER);
@@ -34,6 +35,10 @@ export default function QuestionPage() {
   };
 
   useEffect(() => {
+    if (pathname !== '/practice') {
+      return;
+    }
+
     if (timeLeft <= 0) {
       handleStartAnswer();
       return;
