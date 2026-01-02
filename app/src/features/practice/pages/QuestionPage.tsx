@@ -1,41 +1,25 @@
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Text from '../../../shared/ui/text';
 import { gaps, heights } from '../../../shared/constants/theme';
 import ProgressBar from '../components/progress.bar';
 import { usePathname, useRouter } from 'expo-router';
-import { usePracticeSessionContext } from '../context/PracticeSessionContext';
-import { createQuestion } from '../models/question';
+import { useFetchQuestion } from '../hooks/useFetchQuestion';
 
 const INITIAL_TIMER = 30;
-const DEFAULT_QUESTION =
-  'Tell me about a technical challenge you recently faced and how you solved it.';
 
 export default function QuestionPage() {
   const pathname = usePathname();
   const router = useRouter();
-  const { session, startSession } = usePracticeSessionContext();
+  const { question, isLoading, error, refetch } = useFetchQuestion();
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIMER);
-
-  // Initialize session with a question if not already set
-  useEffect(() => {
-    if (session.status === 'idle') {
-      const question = createQuestion(DEFAULT_QUESTION, 'Technical');
-      startSession(question);
-    }
-  }, [session.status, startSession]);
-
-  const currentQuestion =
-    session.status !== 'idle' && 'question' in session
-      ? session.question?.text
-      : DEFAULT_QUESTION;
 
   const handleStartAnswer = () => {
     router.push('/practice/answer');
   };
 
   useEffect(() => {
-    if (pathname !== '/practice') {
+    if (pathname !== '/practice' || isLoading || error) {
       return;
     }
 
@@ -49,14 +33,50 @@ export default function QuestionPage() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timeLeft]);
+  }, [timeLeft, isLoading, error, pathname]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.loadingContent}>
+          <ActivityIndicator size="large" color="#fff" />
+          <Text variant="body" weight="medium">
+            Loading your question...
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.errorContent}>
+          <Text variant="h2" weight="bold">
+            ⚠️ Oops!
+          </Text>
+          <Text variant="body" weight="medium">
+            {error}
+          </Text>
+          <Text
+            variant="body"
+            weight="bold"
+            onPress={refetch}
+            style={styles.retryButton}
+          >
+            Tap to retry
+          </Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.questionContainer}>
           <Text variant="h1" weight="bold">
-            "{currentQuestion}"
+            "{question?.text}"
           </Text>
           <Text variant="body" weight="medium">
             Take a few seconds to think before answering.
@@ -84,6 +104,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
+  loadingContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: gaps.inner,
+  },
+  errorContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: gaps.inner,
+    paddingHorizontal: 24,
+  },
   questionContainer: {
     gap: gaps.inner,
   },
@@ -91,5 +124,9 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: gaps.inner,
     alignItems: 'center',
+  },
+  retryButton: {
+    marginTop: 16,
+    textDecorationLine: 'underline',
   },
 });
