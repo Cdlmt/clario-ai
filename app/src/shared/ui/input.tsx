@@ -16,7 +16,7 @@ export default function Input(props: InputProps) {
       {label && <Text variant="body" weight="regular" color={colors.black}>{label}</Text>}
       <View style={styles.inputContainer}>
         {icon && <RadixIcon name={icon} size={20} color={colors.black} />}
-        <TextInput style={styles.input} {...passThroughProps} />
+        <TextInput style={styles.input} placeholderTextColor={colors.darkGray} {...passThroughProps} />
       </View>
     </View>
   )
