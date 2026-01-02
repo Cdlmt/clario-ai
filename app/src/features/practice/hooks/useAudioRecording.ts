@@ -43,47 +43,34 @@ export function useAudioRecording(): UseAudioRecordingReturn {
   );
 
   const startRecording = useCallback(async () => {
-    // Prevent concurrent start attempts
     if (isStartingRef.current || hasStartedRecordingRef.current) {
-      console.log('[AudioRecording] Skipping start - already starting or recording');
       return;
     }
 
     isStartingRef.current = true;
-    console.log('[AudioRecording] Starting recording...');
 
     try {
       if (!hasPermissionRef.current) {
-        console.log('[AudioRecording] Requesting permissions...');
         const status = await AudioModule.requestRecordingPermissionsAsync();
         if (!status.granted) {
           throw new Error('Permission to access microphone was denied');
         }
         hasPermissionRef.current = true;
-        console.log('[AudioRecording] Permissions granted');
       }
 
-      // Prepare the recorder before starting
-      console.log('[AudioRecording] Preparing recorder...');
       await audioRecorder.prepareToRecordAsync();
-      console.log('[AudioRecording] Recorder prepared');
 
       setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
       audioRecorder.record();
       hasStartedRecordingRef.current = true;
       setIsRecording(true);
-      console.log('[AudioRecording] Recording started');
     } finally {
       isStartingRef.current = false;
     }
   }, [audioRecorder]);
 
   const stopRecording = useCallback(async (): Promise<string> => {
-    console.log('[AudioRecording] Stopping recording, hasStarted:', hasStartedRecordingRef.current);
-    
-    // Only stop if we started recording
     if (!hasStartedRecordingRef.current) {
-      console.log('[AudioRecording] Never started, checking uriRef:', uriRef.current);
       const uri = uriRef.current;
       if (!uri) {
         throw new Error('No audio URI available');
@@ -97,15 +84,12 @@ export function useAudioRecording(): UseAudioRecordingReturn {
     setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
 
     const tempUri = audioRecorder.uri ?? '';
-    console.log('[AudioRecording] Recording stopped, temp URI:', tempUri);
 
     if (!tempUri) {
       throw new Error('No audio URI available');
     }
 
-    // Check if file exists
     const fileInfo = await FileSystem.getInfoAsync(tempUri);
-    console.log('[AudioRecording] File info:', JSON.stringify(fileInfo));
 
     if (!fileInfo.exists) {
       throw new Error('Audio file does not exist at URI');
@@ -114,18 +98,15 @@ export function useAudioRecording(): UseAudioRecordingReturn {
     // Copy file to document directory to prevent it from being deleted
     const filename = tempUri.split('/').pop() || `recording-${Date.now()}.m4a`;
     const permanentUri = `${FileSystem.documentDirectory}${filename}`;
-    
+
     try {
       await FileSystem.copyAsync({
         from: tempUri,
         to: permanentUri,
       });
-      console.log('[AudioRecording] File copied to:', permanentUri);
       uriRef.current = permanentUri;
       return permanentUri;
-    } catch (copyError) {
-      console.log('[AudioRecording] Copy failed:', copyError);
-      // If copy fails, try to use the original URI
+    } catch {
       uriRef.current = tempUri;
       return tempUri;
     }
@@ -133,7 +114,6 @@ export function useAudioRecording(): UseAudioRecordingReturn {
 
   useEffect(() => {
     return () => {
-      // Only cleanup if recording was never properly stopped
       if (hasStartedRecordingRef.current) {
         try {
           audioRecorder.stop();

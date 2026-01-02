@@ -16,6 +16,7 @@ export default function AnswerPage() {
     if (hasStartedRef.current) {
       return;
     }
+
     hasStartedRef.current = true;
 
     // Small delay to ensure audio module is ready

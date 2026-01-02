@@ -13,8 +13,6 @@ import Text from '../../../shared/ui/text';
 export default function FeedbackPage() {
   const { session } = usePracticeSessionContext();
 
-  console.log('session', session);
-
   // Handle error state
   if (session.status === 'error') {
     return (
