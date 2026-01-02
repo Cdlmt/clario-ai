@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text as RNText } from "react-native";
 import Button from "../../../shared/ui/button";
-import { colors } from "../../../shared/constants/theme";
+import { colors, paddings } from "../../../shared/constants/theme";
 import Text from "../../../shared/ui/text";
 import { useRouter } from "expo-router";
 
@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    paddingBottom: paddings.vertical
   },
   content: {
     justifyContent: 'center',
