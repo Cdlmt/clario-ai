@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Button from '../../../shared/ui/button';
 import Text from '../../../shared/ui/text';
 import { usePathname, useRouter } from 'expo-router';
+import { usePracticeSessionContext } from '../context/PracticeSessionContext';
 
 const BUTTON_COLOR = {
   "/practice": colors.secondary,
@@ -16,16 +17,27 @@ const BUTTON_TEXT = {
   "/practice/feedback": "Next question ⚡️",
 }
 
+const BUTTON_ROUTES = {
+  "/practice": "/practice/answer",
+  "/practice/feedback": "/practice",
+}
+
 export default function PracticeBottomBar() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const pathname = usePathname();
+  const { reset } = usePracticeSessionContext();
 
   const buttonColor = BUTTON_COLOR[pathname as keyof typeof BUTTON_COLOR] ?? colors.primary;
   const buttonText = BUTTON_TEXT[pathname as keyof typeof BUTTON_TEXT] ?? "Start answering  🎙️️";
+  const buttonRoute = BUTTON_ROUTES[pathname as keyof typeof BUTTON_ROUTES] ?? "/practice/answer";
 
   const handleStartAnswer = () => {
-    router.push("/practice/answer");
+    // Reset the session when navigating to next question
+    if (pathname === "/practice/feedback") {
+      reset();
+    }
+    router.push(buttonRoute);
   }
 
   return (
