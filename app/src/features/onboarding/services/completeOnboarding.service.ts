@@ -3,7 +3,7 @@ import { JobCategory } from '../models/job';
 
 export interface CompleteOnboardingRequest {
   name: string;
-  jobKey: string;
+  industryId: number;
   userId: string;
 }
 

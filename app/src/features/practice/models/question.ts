@@ -1,15 +1,18 @@
-import { generateId } from '../../../shared/utils/generateId';
+import { QuestionCategory } from '../services/fetchQuestion.service';
 
 export type Question = {
-  id: string;
+  id: number;
   text: string;
-  category?: string;
+  category?: QuestionCategory | string;
   createdAt: number;
 };
 
-export function createQuestion(text: string, category?: string): Question {
+export function createQuestion(
+  text: string,
+  category?: QuestionCategory | string
+): Question {
   return {
-    id: generateId(),
+    id: Date.now(), // Use timestamp as temporary ID for client-side questions
     text,
     category,
     createdAt: Date.now(),

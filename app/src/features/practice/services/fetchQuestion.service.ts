@@ -1,9 +1,15 @@
 import { API_BASE_URL } from '../../../shared/constants/api';
 
+export type QuestionCategory = {
+  id: number;
+  key: string;
+  name: string;
+};
+
 export type QuestionResponse = {
-  id: string;
+  id: number;
   text: string;
-  category?: string;
+  category?: QuestionCategory;
 };
 
 export type FetchQuestionError = {

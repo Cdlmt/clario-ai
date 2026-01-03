@@ -4,8 +4,34 @@ import {
   CompleteOnboardingResponse,
 } from '../schemas/onboarding.schema';
 import { supabase } from '../lib/supabase';
+import { JobIndustry } from '../models/industry';
 
 const router = Router();
+
+// GET /onboarding/job-industries - Get all available job industries
+router.get(
+  '/job-industries',
+  async (_req: Request, res: Response<JobIndustry[] | { error: string }>) => {
+    try {
+      const { data, error } = await supabase
+        .from('job_industries')
+        .select('*')
+        .order('name');
+
+      if (error) {
+        console.error('Error fetching job industries:', error);
+        return res
+          .status(500)
+          .json({ error: 'Failed to fetch job industries' });
+      }
+
+      res.json(data);
+    } catch (error) {
+      console.error('Unexpected error fetching job industries:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+);
 
 // POST /onboarding/complete - Complete user onboarding
 router.post('/complete', async (req: Request, res: Response) => {
@@ -22,7 +48,7 @@ router.post('/complete', async (req: Request, res: Response) => {
       return;
     }
 
-    const { name, jobKey, userId } = validation.data;
+    const { name, industryId, userId } = validation.data;
 
     // Save onboarding data to database
     const { data, error: dbError } = await supabase
@@ -31,7 +57,7 @@ router.post('/complete', async (req: Request, res: Response) => {
         {
           id: userId,
           name,
-          job_key: jobKey,
+          job_industry: industryId,
         },
         { onConflict: 'id' }
       )
@@ -49,7 +75,7 @@ router.post('/complete', async (req: Request, res: Response) => {
     console.log('Onboarding completed and saved:', {
       userId,
       name,
-      jobKey,
+      industryId,
       timestamp: new Date().toISOString(),
     });
 

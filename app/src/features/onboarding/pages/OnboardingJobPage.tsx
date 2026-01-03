@@ -1,14 +1,16 @@
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import Text from "../../../shared/ui/text";
-import { colors, gaps } from "../../../shared/constants/theme";
+import { colors, gaps, feedbackColors } from "../../../shared/constants/theme";
 import Button from "../../../shared/ui/button";
-import { JOB_CATEGORIES, JobCategory } from "../models/job";
+import { JobCategory } from "../models/job";
 import OnboardingJobSelector from "../components/onboarding.job.selector";
 import { useState } from "react";
 import { useOnboarding } from "../hooks/useOnboarding";
+import { useJobIndustries } from "../hooks/useJobIndustries";
 
 export const OnboardingJobPage = () => {
   const { data, handleJobSubmit } = useOnboarding();
+  const { industries, isLoading, error } = useJobIndustries();
   const [selectedJob, setSelectedJob] = useState<JobCategory | undefined>(data.job ?? undefined);
 
   const handleContinue = () => {
@@ -19,12 +21,34 @@ export const OnboardingJobPage = () => {
     handleJobSubmit(selectedJob);
   };
 
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text variant="h2" weight="bold">{"Second, \nWhat's your job ?"}</Text>
+          <ActivityIndicator size="large" color={colors.black} />
+        </View>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text variant="h2" weight="bold">{"Second, \nWhat's your job ?"}</Text>
+          <Text variant="body" color={feedbackColors.bad}>{error}</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Text variant="h2" weight="bold">{"Second, \nWhat's your job ?"}</Text>
         <View style={styles.jobSelectorsContainer}>
-          {JOB_CATEGORIES.map((job) => (
+          {industries.map((job) => (
             <OnboardingJobSelector key={job.id} job={job} selected={selectedJob === job} onClick={setSelectedJob} />
           ))}
         </View>

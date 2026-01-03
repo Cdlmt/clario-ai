@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const completeOnboardingRequestSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  jobKey: z.string().min(1, 'Job key is required'),
+  industryId: z.number().int().positive('Industry ID must be a positive integer'),
   userId: z.string().min(1, 'User ID is required'),
 });
 

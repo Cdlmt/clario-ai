@@ -85,7 +85,7 @@ export const useOnboarding = () => {
       // Send onboarding data to API
       await completeOnboarding({
         name: data.name,
-        jobKey: data.job?.key || '',
+        industryId: data.job?.id || 0,
         userId: user.id,
       });
 
