@@ -36,8 +36,6 @@ router.get(
 // POST /onboarding/complete - Complete user onboarding
 router.post('/complete', async (req: Request, res: Response) => {
   try {
-    console.log('Onboarding completed:', req.body);
-
     const validation = completeOnboardingRequestSchema.safeParse(req.body);
 
     if (!validation.success) {
@@ -51,7 +49,7 @@ router.post('/complete', async (req: Request, res: Response) => {
     const { name, industryId, userId } = validation.data;
 
     // Save onboarding data to database
-    const { data, error: dbError } = await supabase
+    const { data: _, error: dbError } = await supabase
       .from('users')
       .upsert(
         {
@@ -71,13 +69,6 @@ router.post('/complete', async (req: Request, res: Response) => {
       });
       return;
     }
-
-    console.log('Onboarding completed and saved:', {
-      userId,
-      name,
-      industryId,
-      timestamp: new Date().toISOString(),
-    });
 
     const response: CompleteOnboardingResponse = {
       success: true,
