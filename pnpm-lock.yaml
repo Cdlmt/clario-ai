@@ -87,6 +87,9 @@ importers:
 
   server:
     dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.89.0
+        version: 2.89.0
       express:
         specifier: ^4.21.2
         version: 4.22.1

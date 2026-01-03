@@ -2,6 +2,8 @@ import { useState, useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { useOnboardingContext } from '../context/OnboardingContext';
 import { signInWithProvider, SocialProvider } from '../services/auth.service';
+import { completeOnboarding } from '../services/completeOnboarding.service';
+import { useAuth } from '../../auth/context/AuthContext';
 import { JobCategory } from '../models/job';
 
 type OnboardingState = {
@@ -12,13 +14,14 @@ type OnboardingState = {
 export const useOnboarding = () => {
   const router = useRouter();
   const { data, setName, setJob, reset } = useOnboardingContext();
+  const { user, refreshSession, setOnboarded } = useAuth();
   const [state, setState] = useState<OnboardingState>({
     isLoading: false,
     error: null,
   });
 
   const goToNameStep = useCallback(() => {
-    router.push('/(onboarding)/(steps)/name');
+    router.push('(steps)/name');
   }, [router]);
 
   const handleNameSubmit = useCallback(
@@ -29,7 +32,7 @@ export const useOnboarding = () => {
       }
 
       setName(name.trim());
-      router.push('/(onboarding)/(steps)/job');
+      router.push('(steps)/job');
     },
     [router, setName]
   );
@@ -37,7 +40,7 @@ export const useOnboarding = () => {
   const handleJobSubmit = useCallback(
     (job: JobCategory) => {
       setJob(job);
-      router.push('/(onboarding)/(steps)/signup');
+      router.push('(steps)/signup');
     },
     [router, setJob]
   );
@@ -54,27 +57,59 @@ export const useOnboarding = () => {
           return;
         }
 
-        router.replace('/(onboarding)/success');
+        router.replace('/success');
       } catch (error) {
         setState({
           isLoading: false,
           error:
             error instanceof Error ? error.message : 'Authentication failed',
         });
-        router.replace('/(onboarding)/error');
+        router.replace('error');
       }
     },
     [router]
   );
 
-  const handleSuccess = useCallback(() => {
-    reset();
-    router.replace('/practice');
-  }, [router, reset]);
+  const handleSuccess = useCallback(async () => {
+    if (!user?.id) {
+      setState({
+        isLoading: false,
+        error: 'User not authenticated',
+      });
+      return;
+    }
+
+    setState({ isLoading: true, error: null });
+
+    try {
+      // Send onboarding data to API
+      await completeOnboarding({
+        name: data.name,
+        jobKey: data.job?.key || '',
+        userId: user.id,
+      });
+
+      // Reset context
+      reset();
+
+      // Refresh auth session to ensure user is properly authenticated
+      await refreshSession();
+
+      setOnboarded(true);
+    } catch (error) {
+      setState({
+        isLoading: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to complete onboarding',
+      });
+    }
+  }, [router, reset, data.name, data.job, user?.id]);
 
   const handleRetry = useCallback(() => {
     setState({ isLoading: false, error: null });
-    router.replace('/(onboarding)/(steps)/signup');
+    router.replace('(steps)/signup');
   }, [router]);
 
   return {

@@ -12,11 +12,13 @@ interface AuthState {
   session: Session | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isOnboarded: boolean;
 }
 
 interface AuthContextType extends AuthState {
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
+  setOnboarded: (isOnboarded: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,6 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     session: null,
     isLoading: true,
     isAuthenticated: false,
+    isOnboarded: false,
   });
 
   const refreshSession = async () => {
@@ -53,6 +56,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         session,
         isLoading: false,
         isAuthenticated: !!session && !!user,
+        isOnboarded: true,
       });
     } catch (error) {
       setAuthState({
@@ -60,6 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         session: null,
         isLoading: false,
         isAuthenticated: false,
+        isOnboarded: false,
       });
     }
   };
@@ -72,17 +77,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         session: null,
         isLoading: false,
         isAuthenticated: false,
+        isOnboarded: false,
       });
     } catch (error) {
       console.error('Error signing out:', error);
     }
   };
 
+  const setOnboarded = (isOnboarded: boolean) => {
+    setAuthState((prev) => ({ ...prev, isOnboarded }));
+  };
+
   useEffect(() => {
     refreshSession();
 
     const { data: { subscription } } = onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event, session?.user?.id);
 
       if (event === 'SIGNED_IN' && session) {
         setAuthState({
@@ -90,6 +99,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           session,
           isLoading: false,
           isAuthenticated: true,
+          isOnboarded: false,
         });
       } else if (event === 'SIGNED_OUT') {
         setAuthState({
@@ -97,6 +107,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           session: null,
           isLoading: false,
           isAuthenticated: false,
+          isOnboarded: false,
         });
       } else if (event === 'TOKEN_REFRESHED' && session) {
         setAuthState({
@@ -104,6 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           session,
           isLoading: false,
           isAuthenticated: true,
+          isOnboarded: false,
         });
       }
     });
@@ -117,6 +129,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     ...authState,
     signOut: handleSignOut,
     refreshSession,
+    setOnboarded,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

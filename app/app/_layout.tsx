@@ -15,17 +15,17 @@ export default function RootLayout() {
 }
 
 function RootStack() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, isOnboarded } = useAuth();
 
   if (isLoading) return null;
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!isAuthenticated}>
+      <Stack.Protected guard={!isAuthenticated || !isOnboarded}>
         <Stack.Screen name="(onboarding)" />
       </Stack.Protected>
 
-      <Stack.Protected guard={isAuthenticated}>
+      <Stack.Protected guard={isAuthenticated && isOnboarded}>
         <Stack.Screen name="(app)" />
       </Stack.Protected>
     </Stack>
