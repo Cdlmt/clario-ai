@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import transcribeRoute from './routes/transcribe.route';
 import analyzeRoute from './routes/analyze.route';
