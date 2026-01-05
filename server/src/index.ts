@@ -10,6 +10,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// Request logging middleware
+app.use((req, _res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 // Health check
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
@@ -21,6 +27,9 @@ app.use('/analyze', analyzeRoute);
 app.use('/questions', questionRoute);
 app.use('/onboarding', onboardingRoute);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(parseInt(PORT as string, 10), '0.0.0.0', () => {
+  console.log(
+    `Server running on http://0.0.0.0:${PORT} (accessible on network)`
+  );
+  console.log(`Local access: http://localhost:${PORT}`);
 });

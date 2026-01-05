@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useAudioRecorder, AudioModule, RecordingPresets } from 'expo-audio';
+import { useAudioRecorder, AudioModule, AudioQuality } from 'expo-audio';
 import * as FileSystem from 'expo-file-system';
 
 const LEVEL_HISTORY_SIZE = 32;
@@ -30,8 +30,21 @@ export function useAudioRecording(): UseAudioRecordingReturn {
 
   const audioRecorder = useAudioRecorder(
     {
-      ...RecordingPresets.HIGH_QUALITY,
-      isMeteringEnabled: true,
+      extension: '.m4a',
+      sampleRate: 44100,
+      numberOfChannels: 1,
+      bitRate: 128000,
+      android: {
+        extension: '.m4a',
+        outputFormat: 'mpeg4',
+        audioEncoder: 'aac',
+        sampleRate: 44100,
+      },
+      ios: {
+        extension: '.m4a',
+        audioQuality: AudioQuality.HIGH,
+        sampleRate: 44100,
+      },
     },
     (status) => {
       const statusWithMetering = status as { metering?: number };
@@ -58,12 +71,22 @@ export function useAudioRecording(): UseAudioRecordingReturn {
         hasPermissionRef.current = true;
       }
 
+      await AudioModule.setAudioModeAsync({
+        allowsRecording: true,
+        playsInSilentMode: true,
+      });
+
       await audioRecorder.prepareToRecordAsync();
 
       setLevels(Array(LEVEL_HISTORY_SIZE).fill(0));
-      audioRecorder.record();
+      console.log('Starting recording...');
+      await audioRecorder.record();
       hasStartedRecordingRef.current = true;
       setIsRecording(true);
+      console.log('Recording started successfully');
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      throw error;
     } finally {
       isStartingRef.current = false;
     }
@@ -106,7 +129,8 @@ export function useAudioRecording(): UseAudioRecordingReturn {
       });
       uriRef.current = permanentUri;
       return permanentUri;
-    } catch {
+    } catch (error) {
+      console.error('Error copying file:', error);
       uriRef.current = tempUri;
       return tempUri;
     }

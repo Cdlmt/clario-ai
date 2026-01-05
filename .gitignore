@@ -44,3 +44,6 @@ app/.eas/
 
 # Xcode
 app/ios/
+
+# Server
+server/uploads/

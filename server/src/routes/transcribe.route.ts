@@ -1,34 +1,47 @@
 import { Router, Request, Response } from 'express';
 import { TranscribeResponse } from '../schemas/transcribe.schema';
+import { uploadAudio } from '../middlewares/multer.middleware';
+import { TranscriptionService } from '../services/transcription.service';
 
 const router = Router();
 
 // POST /transcribe - Transcribes audio file to text
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', uploadAudio, async (req: Request, res: Response) => {
   try {
-    // TODO: Integrate with actual speech-to-text service (Whisper, Google, etc.)
-    // For now, return a mock response for development
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({
+        error: 'NO_AUDIO_FILE',
+        message: 'No audio file provided',
+      });
+    }
 
-    // In production, this would:
-    // 1. Receive audio file from multipart form data
-    // 2. Send to transcription service (OpenAI Whisper, etc.)
-    // 3. Return the transcript
-
-    const mockTranscript = `I recently faced a challenging technical issue when our 
-    production database started experiencing slow query times. The problem was causing 
-    our API response times to spike significantly. I approached this by first analyzing 
-    our query logs to identify the slow queries. Then I used EXPLAIN ANALYZE to understand 
-    the execution plans. I discovered that we were missing crucial indexes on some 
-    frequently joined columns. After adding the appropriate indexes and optimizing 
-    a few N+1 query patterns, our response times dropped by 80%.`;
+    // Transcribe the audio
+    const result = await TranscriptionService.transcribeAudio(req.file.path);
 
     const response: TranscribeResponse = {
-      transcript: mockTranscript.replace(/\s+/g, ' ').trim(),
+      transcript: result.transcript,
     };
 
     res.json(response);
   } catch (error) {
     console.error('Transcription error:', error);
+
+    // Handle multer errors
+    if (error instanceof Error && error.message.includes('Invalid file type')) {
+      return res.status(400).json({
+        error: 'INVALID_FILE_TYPE',
+        message: error.message,
+      });
+    }
+
+    if (error instanceof Error && error.message.includes('File too large')) {
+      return res.status(400).json({
+        error: 'FILE_TOO_LARGE',
+        message: 'Audio file is too large. Maximum size is 25MB.',
+      });
+    }
+
     res.status(500).json({
       error: 'TRANSCRIPTION_FAILED',
       message: 'Failed to transcribe audio',
