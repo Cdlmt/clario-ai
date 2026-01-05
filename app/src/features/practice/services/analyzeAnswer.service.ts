@@ -5,6 +5,7 @@ export type AnalyzeRequest = {
   question: string;
   transcript: string;
   durationSeconds: number;
+  sessionId?: string;
 };
 
 export type AnalyzeResponse = Omit<Feedback, 'id' | 'createdAt'>;

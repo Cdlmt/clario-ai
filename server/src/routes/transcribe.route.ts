@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { TranscribeResponse } from '../schemas/transcribe.schema';
 import { uploadAudio } from '../middlewares/multer.middleware';
 import { TranscriptionService } from '../services/transcription.service';
+import { SessionService } from '../services/session.service';
 
 const router = Router();
 
@@ -19,8 +20,16 @@ router.post('/', uploadAudio, async (req: Request, res: Response) => {
     // Transcribe the audio
     const result = await TranscriptionService.transcribeAudio(req.file.path);
 
+    // Create session in database
+    const session = await SessionService.createSession(
+      '', // question will be set during analysis
+      result.transcript,
+      0 // duration will be set during analysis
+    );
+
     const response: TranscribeResponse = {
       transcript: result.transcript,
+      sessionId: session.id,
     };
 
     res.json(response);

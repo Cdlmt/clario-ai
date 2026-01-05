@@ -4,6 +4,7 @@ export const analyzeRequestSchema = z.object({
   question: z.string().min(1, 'Question is required'),
   transcript: z.string().min(1, 'Transcript is required'),
   durationSeconds: z.number().positive('Duration must be positive'),
+  sessionId: z.string().optional(),
 });
 
 export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>;

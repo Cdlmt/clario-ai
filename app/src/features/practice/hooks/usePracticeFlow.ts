@@ -47,6 +47,7 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
   const [error, setLocalError] = useState<string | null>(null);
   const recordingStartTimeRef = useRef<number>(0);
   const hasBegunRecordingRef = useRef(false);
+  const sessionIdRef = useRef<string | null>(null);
 
   const currentQuestion = getQuestionFromSession(
     session as { status: string; question?: Question }
@@ -95,14 +96,16 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
         }
 
         // Transcribe the audio
-        const { transcript } = await transcribeAudio(audioUri);
+        const { transcript, sessionId } = await transcribeAudio(audioUri);
         setTranscript(transcript);
+        sessionIdRef.current = sessionId;
 
         // Analyze the answer
         const analysisResult = await analyzeAnswer({
           question: question.text,
           transcript,
           durationSeconds,
+          sessionId,
         });
 
         const feedback: Feedback = {

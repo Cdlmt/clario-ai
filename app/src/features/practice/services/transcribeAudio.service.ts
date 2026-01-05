@@ -2,6 +2,7 @@ import { API_BASE_URL } from '../../../shared/constants/api';
 
 export type TranscribeResponse = {
   transcript: string;
+  sessionId: string;
 };
 
 export type TranscribeError = {

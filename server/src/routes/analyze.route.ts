@@ -4,6 +4,7 @@ import {
   AnalyzeResponse,
 } from '../schemas/analyze.schema';
 import { AnalysisService } from '../services/analysis.service';
+import { SessionService } from '../services/session.service';
 
 const router = Router();
 
@@ -24,6 +25,30 @@ router.post('/', async (req: Request, res: Response) => {
 
     // Use OpenAI-powered analysis service
     const response = await AnalysisService.analyzeAnswer(analysisRequest);
+
+    // Update session and create feedback if sessionId is provided
+    if (analysisRequest.sessionId) {
+      try {
+        // First update session with question and duration
+        await SessionService.updateSessionDetails(
+          analysisRequest.sessionId,
+          analysisRequest.question,
+          analysisRequest.durationSeconds
+        );
+
+        // Then create feedback
+        await SessionService.createSessionFeedback(
+          analysisRequest.sessionId,
+          response
+        );
+      } catch (sessionError) {
+        console.warn(
+          'Failed to update session or create feedback:',
+          sessionError
+        );
+        // Don't fail the request if session update fails
+      }
+    }
 
     res.json(response);
   } catch (error) {
