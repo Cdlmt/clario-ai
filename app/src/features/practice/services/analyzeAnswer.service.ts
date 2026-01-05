@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../../../shared/constants/api';
+import { ApiService } from '../../../shared/lib/api';
 import { Feedback } from '../models/feedback';
 
 export type AnalyzeRequest = {
@@ -18,13 +19,13 @@ export type AnalyzeError = {
 export async function analyzeAnswer(
   request: AnalyzeRequest
 ): Promise<AnalyzeResponse> {
-  const response = await fetch(`${API_BASE_URL}/analyze`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(request),
-  });
+  const response = await ApiService.authenticatedFetch(
+    `${API_BASE_URL}/analyze`,
+    {
+      method: 'POST',
+      body: JSON.stringify(request),
+    }
+  );
 
   if (!response.ok) {
     const errorData: AnalyzeError = await response.json();

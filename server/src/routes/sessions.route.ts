@@ -2,20 +2,22 @@ import { Router, Request, Response } from 'express';
 import { SessionService } from '../services/session.service';
 import { FeedbackService } from '../services/feedback.service';
 import { InterviewSession, SessionWithFeedback } from '../models/session';
+import { authenticateUser } from '../middlewares/auth.middleware';
 
 const router = Router();
 
 // GET /sessions - Get all sessions
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', authenticateUser, async (req: Request, res: Response) => {
   try {
     const { analyzed } = req.query;
+    const userId = req.user!.id;
 
     let sessions: InterviewSession[] | SessionWithFeedback[];
 
     if (analyzed === 'true') {
-      sessions = await SessionService.getAnalyzedSessions();
+      sessions = await SessionService.getAnalyzedSessions(userId);
     } else {
-      sessions = await SessionService.getAllSessions();
+      sessions = await SessionService.getAllSessions(userId);
     }
 
     res.json({ sessions });
@@ -29,9 +31,10 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // GET /sessions/:id - Get a specific session
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', authenticateUser, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const userId = req.user!.id;
 
     const session = await SessionService.getSessionById(id);
 
@@ -39,6 +42,14 @@ router.get('/:id', async (req: Request, res: Response) => {
       return res.status(404).json({
         error: 'SESSION_NOT_FOUND',
         message: 'Session not found',
+      });
+    }
+
+    // Check if session belongs to the authenticated user
+    if (session.user_id !== userId) {
+      return res.status(403).json({
+        error: 'ACCESS_DENIED',
+        message: 'You do not have permission to access this session',
       });
     }
 
@@ -53,9 +64,10 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 // DELETE /sessions/:id - Delete a session and its feedback
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', authenticateUser, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const userId = req.user!.id;
 
     // Get session to check if it has feedback
     const session = await SessionService.getSessionById(id);
@@ -63,6 +75,14 @@ router.delete('/:id', async (req: Request, res: Response) => {
       return res.status(404).json({
         error: 'SESSION_NOT_FOUND',
         message: 'Session not found',
+      });
+    }
+
+    // Check if session belongs to the authenticated user
+    if (session.user_id !== userId) {
+      return res.status(403).json({
+        error: 'ACCESS_DENIED',
+        message: 'You do not have permission to delete this session',
       });
     }
 

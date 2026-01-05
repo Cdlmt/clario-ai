@@ -5,11 +5,12 @@ import {
 } from '../schemas/analyze.schema';
 import { AnalysisService } from '../services/analysis.service';
 import { SessionService } from '../services/session.service';
+import { authenticateUser } from '../middlewares/auth.middleware';
 
 const router = Router();
 
 // POST /analyze - Analyzes transcript and returns feedback
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', authenticateUser, async (req: Request, res: Response) => {
   try {
     const validation = analyzeRequestSchema.safeParse(req.body);
 

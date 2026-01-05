@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../../../shared/constants/api';
+import { ApiService } from '../../../shared/lib/api';
 
 export type TranscribeResponse = {
   transcript: string;
@@ -26,13 +27,10 @@ export async function transcribeAudio(
     type,
   } as unknown as Blob);
 
-  const response = await fetch(`${API_BASE_URL}/transcribe`, {
-    method: 'POST',
-    body: formData,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  const response = await ApiService.authenticatedUpload(
+    `${API_BASE_URL}/transcribe`,
+    formData
+  );
 
   if (!response.ok) {
     const errorData: TranscribeError = await response.json();

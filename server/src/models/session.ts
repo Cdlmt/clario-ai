@@ -1,6 +1,7 @@
 export interface InterviewSession {
   id: string;
   created_at: string;
+  user_id: string;
   question: string;
   transcript: string;
   duration_seconds: number;

@@ -10,11 +10,13 @@ export class SessionService {
    * Creates a new interview session after transcription
    */
   static async createSession(
+    userId: string,
     question: string,
     transcript: string,
     durationSeconds: number
   ): Promise<InterviewSession> {
     const session: Omit<InterviewSession, 'id' | 'created_at'> = {
+      user_id: userId,
       question,
       transcript,
       duration_seconds: durationSeconds,
@@ -70,11 +72,13 @@ export class SessionService {
    * Gets all sessions with optional analysis filter
    */
   static async getAllSessions(
+    userId: string,
     includeOnlyAnalyzed = false
   ): Promise<InterviewSession[]> {
     let query = supabase
       .from(this.TABLE_NAME)
       .select('*')
+      .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
     if (includeOnlyAnalyzed) {
@@ -118,8 +122,10 @@ export class SessionService {
   /**
    * Gets sessions with feedback
    */
-  static async getAnalyzedSessions(): Promise<SessionWithFeedback[]> {
-    return await FeedbackService.getAnalyzedSessionsWithFeedback();
+  static async getAnalyzedSessions(
+    userId: string
+  ): Promise<SessionWithFeedback[]> {
+    return await FeedbackService.getAnalyzedSessionsWithFeedback(userId);
   }
 
   /**

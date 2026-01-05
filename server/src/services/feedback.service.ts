@@ -213,9 +213,9 @@ export class FeedbackService {
   /**
    * Gets only analyzed sessions with feedback
    */
-  static async getAnalyzedSessionsWithFeedback(): Promise<
-    SessionWithFeedback[]
-  > {
+  static async getAnalyzedSessionsWithFeedback(
+    userId: string
+  ): Promise<SessionWithFeedback[]> {
     const { data, error } = await supabase
       .from('interview_sessions')
       .select(
@@ -236,6 +236,7 @@ export class FeedbackService {
         )
       `
       )
+      .eq('user_id', userId)
       .not('feedback_id', 'is', null)
       .order('analyzed_at', { ascending: false });
 
