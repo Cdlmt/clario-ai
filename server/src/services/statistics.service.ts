@@ -93,4 +93,108 @@ export class StatisticsService {
       };
     });
   }
+
+  /**
+   * Gets user streak statistics
+   */
+  static async getStreakStats(userId: string): Promise<{
+    currentStreak: number;
+    totalAnswers: number;
+    averageLength: string;
+  }> {
+    // Get all analyzed sessions for the user
+    const { data: sessions, error } = await supabase
+      .from('interview_sessions')
+      .select('created_at, duration_seconds')
+      .eq('user_id', userId)
+      .not('analyzed_at', 'is', null) // Only analyzed sessions
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching streak stats:', error);
+      throw new Error('Failed to fetch streak stats');
+    }
+
+    const analyzedSessions = sessions || [];
+
+    // Calculate total answers
+    const totalAnswers = analyzedSessions.length;
+
+    // Calculate average length
+    const totalDuration = analyzedSessions.reduce(
+      (sum, session) => sum + session.duration_seconds,
+      0
+    );
+    const averageLengthSeconds =
+      totalAnswers > 0 ? totalDuration / totalAnswers : 0;
+    const averageLength = this.formatDuration(averageLengthSeconds);
+
+    // Calculate current streak
+    const currentStreak = this.calculateCurrentStreak(analyzedSessions);
+
+    return {
+      currentStreak,
+      totalAnswers,
+      averageLength,
+    };
+  }
+
+  /**
+   * Calculates the current streak of consecutive days with at least one session
+   */
+  private static calculateCurrentStreak(
+    sessions: Array<{ created_at: string }>
+  ): number {
+    if (sessions.length === 0) return 0;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Group sessions by date (YYYY-MM-DD)
+    const sessionsByDate = sessions.reduce(
+      (acc: Record<string, boolean>, session) => {
+        const date = new Date(session.created_at).toISOString().split('T')[0];
+        acc[date] = true;
+        return acc;
+      },
+      {}
+    );
+
+    let streak = 0;
+    let checkDate = new Date(today);
+
+    // Check if today has a session
+    const todayStr = checkDate.toISOString().split('T')[0];
+    if (!sessionsByDate[todayStr]) {
+      // If no session today, check yesterday
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+
+    // Count consecutive days backwards
+    while (true) {
+      const dateStr = checkDate.toISOString().split('T')[0];
+      if (sessionsByDate[dateStr]) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+
+    return streak;
+  }
+
+  /**
+   * Formats duration in seconds to a readable format (e.g., "1m39s")
+   */
+  private static formatDuration(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    if (minutes > 0) {
+      return `${minutes}m${remainingSeconds.toString().padStart(2, '0')}s`;
+    } else {
+      return `${remainingSeconds}s`;
+    }
+  }
 }

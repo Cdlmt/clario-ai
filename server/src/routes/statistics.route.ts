@@ -24,4 +24,20 @@ router.get(
   }
 );
 
+// GET /statistics/streak - Get user streak statistics
+router.get('/streak', authenticateUser, async (req: Request, res: Response) => {
+  try {
+    const userId = req.user!.id;
+    const streakStats = await StatisticsService.getStreakStats(userId);
+
+    res.json({ streak_stats: streakStats });
+  } catch (error) {
+    console.error('Error fetching streak stats:', error);
+    res.status(500).json({
+      error: 'FETCH_STREAK_STATS_FAILED',
+      message: 'Failed to fetch streak stats',
+    });
+  }
+});
+
 export default router;
