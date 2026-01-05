@@ -25,6 +25,7 @@ export class TranscriptionService {
         file,
         model: 'whisper-1',
         response_format: 'text',
+        language: 'en',
       });
 
       console.log(

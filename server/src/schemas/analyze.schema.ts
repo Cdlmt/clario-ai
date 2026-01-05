@@ -8,12 +8,9 @@ export const analyzeRequestSchema = z.object({
 
 export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>;
 
-const clarityLabelSchema = z.enum(['low', 'medium', 'high']);
-
 export const analyzeResponseSchema = z.object({
   clarity: z.object({
     rating: z.number().min(0).max(100),
-    label: clarityLabelSchema,
     comment: z.string(),
   }),
   length: z.object({
