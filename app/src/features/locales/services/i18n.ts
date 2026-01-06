@@ -40,8 +40,8 @@ export const setStoredLanguage = async (
 ): Promise<void> => {
   try {
     await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, language);
-  } catch (error) {
-    console.error('Failed to store language preference:', error);
+  } catch {
+    // Silently fail - language preference storage is not critical
   }
 };
 
@@ -69,9 +69,6 @@ const initializeI18n = async () => {
     detection: {
       order: [],
     },
-
-    // Debug settings
-    debug: __DEV__,
   });
 
   return i18n;
