@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../../../shared/constants/api';
+import { ApiService } from '../../../shared/lib/api';
 
 export type QuestionCategory = {
   id: number;
@@ -23,12 +24,7 @@ export async function fetchRandomQuestion(
     ? `${API_BASE_URL}/questions/${encodeURIComponent(category)}/random`
     : `${API_BASE_URL}/questions/random`;
 
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const response = await ApiService.authenticatedFetch(url);
 
   if (!response.ok) {
     const errorData: FetchQuestionError = await response.json();
@@ -40,12 +36,9 @@ export async function fetchRandomQuestion(
 }
 
 export async function fetchCategories(): Promise<string[]> {
-  const response = await fetch(`${API_BASE_URL}/questions`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const response = await ApiService.authenticatedFetch(
+    `${API_BASE_URL}/questions`
+  );
 
   if (!response.ok) {
     throw new Error('Failed to fetch categories');

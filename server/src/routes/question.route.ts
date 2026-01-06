@@ -1,62 +1,42 @@
 import { Router, Request, Response } from 'express';
-import { supabase } from '../lib/supabase';
 import {
   questionResponseSchema,
   QuestionResponse,
   categoriesResponseSchema,
 } from '../schemas/question.schema';
+import { authenticateUser } from '../middlewares/auth.middleware';
+import { QuestionService } from '../services/question.service';
 
 const router = Router();
 
-// GET /questions/random - Returns a random question
+// GET /questions/random - Returns a random question filtered by user's industry
 router.get(
   '/random',
-  async (
-    _req: Request,
-    res: Response<QuestionResponse | { error: string }>
-  ) => {
+  authenticateUser,
+  async (req: Request, res: Response<QuestionResponse | { error: string }>) => {
     try {
-      // Get a random question with category information
-      const { data, error } = await supabase
-        .from('questions')
-        .select(
-          `
-        id,
-        text,
-        category,
-        question_categories (
-          id,
-          key,
-          name
-        )
-      `
-        )
-        .order('RANDOM()')
-        .limit(1);
-
-      if (error) {
-        console.error('Error fetching random question:', error);
-        return res.status(500).json({ error: 'Failed to fetch question' });
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
       }
 
-      if (!data || data.length === 0) {
-        return res.status(404).json({ error: 'No questions available' });
+      // Get user's industry
+      const userIndustry = await QuestionService.getUserIndustry(userId);
+      if (!userIndustry) {
+        return res.status(400).json({
+          error: 'User industry not found. Please complete onboarding.',
+        });
       }
 
-      const questionData = data[0];
-
-      // Transform the data to match our response schema
-      const question: QuestionResponse = {
-        id: questionData.id,
-        text: questionData.text,
-        category: questionData.question_categories
-          ? {
-              id: (questionData.question_categories as any).id,
-              key: (questionData.question_categories as any).key,
-              name: (questionData.question_categories as any).name,
-            }
-          : undefined,
-      };
+      // Get a random question from user's industry
+      const question = await QuestionService.getRandomQuestionByIndustry(
+        userIndustry
+      );
+      if (!question) {
+        return res
+          .status(404)
+          .json({ error: 'No questions available for your industry' });
+      }
 
       // Validate the response
       const validation = questionResponseSchema.safeParse(question);
@@ -73,72 +53,42 @@ router.get(
   }
 );
 
-// GET /questions/:category/random - Returns a random question from a specific category
+// GET /questions/:category/random - Returns a random question from a specific category filtered by user's industry
 router.get(
   '/:category/random',
+  authenticateUser,
   async (
     req: Request<{ category: string }>,
     res: Response<QuestionResponse | { error: string }>
   ) => {
     try {
       const { category } = req.params;
+      const userId = req.user?.id;
 
-      // First, find the category by key
-      const { data: categoryData, error: categoryError } = await supabase
-        .from('question_categories')
-        .select('id')
-        .eq('key', category)
-        .single();
-
-      if (categoryError || !categoryData) {
-        return res
-          .status(404)
-          .json({ error: `Category not found: ${category}` });
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
       }
 
-      // Get a random question from this category
-      const { data, error } = await supabase
-        .from('questions')
-        .select(
-          `
-          id,
-          text,
-          question_categories (
-            id,
-            key,
-            name
-          )
-        `
-        )
-        .eq('category', categoryData.id)
-        .order('RANDOM()')
-        .limit(1);
-
-      if (error) {
-        console.error('Error fetching random question by category:', error);
-        return res.status(500).json({ error: 'Failed to fetch question' });
+      // Get user's industry
+      const userIndustry = await QuestionService.getUserIndustry(userId);
+      if (!userIndustry) {
+        return res.status(400).json({
+          error: 'User industry not found. Please complete onboarding.',
+        });
       }
 
-      if (!data || data.length === 0) {
-        return res
-          .status(404)
-          .json({ error: `No questions found for category: ${category}` });
+      // Get a random question from this category and user's industry
+      const question =
+        await QuestionService.getRandomQuestionByCategoryAndIndustry(
+          category,
+          userIndustry
+        );
+
+      if (!question) {
+        return res.status(404).json({
+          error: `No questions found for category: ${category} in your industry`,
+        });
       }
-
-      const questionData = data[0];
-
-      // Transform the data to match our response schema
-      const question: QuestionResponse = {
-        id: questionData.id,
-        text: questionData.text,
-        category: questionData.question_categories
-          ? {
-              id: (questionData.question_categories as any).id,
-              key: (questionData.question_categories as any).key,
-              name: (questionData.question_categories as any).name,
-            }
-          : undefined,
-      };
 
       // Validate the response
       const validation = questionResponseSchema.safeParse(question);
@@ -149,10 +99,15 @@ router.get(
 
       res.json(question);
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
       console.error(
-        'Unexpected error fetching random question by category:',
-        error
+        'Error fetching random question by category:',
+        errorMessage
       );
+      if (errorMessage.includes('Category not found')) {
+        return res.status(404).json({ error: errorMessage });
+      }
       res.status(500).json({ error: 'Internal server error' });
     }
   }
@@ -166,17 +121,7 @@ router.get(
     res: Response<{ categories: string[] } | { error: string }>
   ) => {
     try {
-      const { data, error } = await supabase
-        .from('question_categories')
-        .select('key')
-        .order('name');
-
-      if (error) {
-        console.error('Error fetching categories:', error);
-        return res.status(500).json({ error: 'Failed to fetch categories' });
-      }
-
-      const categories = data.map((cat) => cat.key);
+      const categories = await QuestionService.getCategories();
 
       // Validate the response
       const validation = categoriesResponseSchema.safeParse({ categories });
@@ -187,7 +132,7 @@ router.get(
 
       res.json({ categories });
     } catch (error) {
-      console.error('Unexpected error fetching categories:', error);
+      console.error('Error fetching categories:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   }

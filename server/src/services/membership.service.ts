@@ -7,7 +7,7 @@ import {
   MembershipStatus,
 } from '../models/membership';
 
-const FREE_DAILY_LIMIT = 3;
+const FREE_DAILY_LIMIT = 10;
 
 export class MembershipService {
   /**
