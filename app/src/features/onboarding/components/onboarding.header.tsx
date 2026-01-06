@@ -1,7 +1,7 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import Text from '../../../shared/ui/text';
 import { colors, paddings } from '../../../shared/constants/theme';
-import { RadixIcon } from 'radix-ui-react-native-icons';
+import { Feather } from '@expo/vector-icons';
 
 type OnboardingHeaderProps = {
   currentStep: number;
@@ -24,7 +24,7 @@ export default function OnboardingHeader({
         disabled={!onBack}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
-        <RadixIcon name="chevron-left" size={20} color={colors.primary} />
+        <Feather name="chevron-left" size={20} color={colors.primary} />
       </TouchableOpacity>
 
       <View style={styles.progressBarContainer}>

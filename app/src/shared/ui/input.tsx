@@ -2,11 +2,11 @@ import { StyleSheet, TextInput, TextInputProps, View } from 'react-native'
 import React from 'react'
 import Text from './text';
 import { colors } from '../constants/theme';
-import { RadixIcon, RadixIconName } from 'radix-ui-react-native-icons';
+import { Feather } from '@expo/vector-icons';
 
 type InputProps = TextInputProps & {
   label?: string;
-  icon?: RadixIconName;
+  icon?: keyof typeof Feather.glyphMap;
 };
 
 export default function Input(props: InputProps) {
@@ -15,7 +15,7 @@ export default function Input(props: InputProps) {
     <View style={styles.container}>
       {label && <Text variant="body" weight="regular" color={colors.black}>{label}</Text>}
       <View style={styles.inputContainer}>
-        {icon && <RadixIcon name={icon} size={20} color={colors.black} />}
+        {icon && <Feather name={icon} size={20} color={colors.black} />}
         <TextInput style={styles.input} placeholderTextColor={colors.darkGray} {...passThroughProps} />
       </View>
     </View>

@@ -33,7 +33,16 @@
     },
     "plugins": [
       "expo-router",
-      "expo-audio"
+      "expo-audio",
+      "expo-apple-authentication",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "usesNonExemptEncryption": false
+          }
+        }
+      ]
     ],
     "extra": {
       "router": {},

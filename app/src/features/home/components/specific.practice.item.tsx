@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native'
 import Text from '../../../shared/ui/text';
-import { RadixIcon } from 'radix-ui-react-native-icons';
+import { Feather } from '@expo/vector-icons';
 
 type SpecificPracticeItemProps = {
   icon: ImageSourcePropType;
@@ -24,7 +24,7 @@ export default function SpecificPracticeItem(props: SpecificPracticeItemProps) {
           <Text variant="text" weight="regular" color={color}>Practice with questions {name} ask in interview</Text>
         </View>
       </View>
-      <RadixIcon name="chevron-right" size={24} color={color} />
+      <Feather name="chevron-right" size={24} color={color} />
     </View>
   )
 }

@@ -20,7 +20,7 @@ export const OnboardingNamePage = () => {
         <Text variant="h2" weight="bold">{"First, \nWhat's your name ?"}</Text>
         <Input
           label="First name"
-          icon="avatar"
+          icon="user"
           placeholder="John"
           value={name}
           onChangeText={setName}

@@ -2,15 +2,18 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "../src/features/auth";
+import PaywallProvider from "../src/features/membership/providers/paywall.provider";
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <SafeAreaProvider>
-        <StatusBar style="auto" />
-        <RootStack />
-      </SafeAreaProvider>
-    </AuthProvider>
+    <PaywallProvider>
+      <AuthProvider>
+        <SafeAreaProvider>
+          <StatusBar style="auto" />
+          <RootStack />
+        </SafeAreaProvider>
+      </AuthProvider>
+    </PaywallProvider>
   );
 }
 

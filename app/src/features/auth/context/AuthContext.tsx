@@ -6,6 +6,7 @@ import {
   onAuthStateChange,
   signOut
 } from '../../onboarding/services/auth.service';
+import { useUser } from 'expo-superwall';
 
 interface AuthState {
   user: User | null;
@@ -43,6 +44,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: false,
     isOnboarded: false,
   });
+  const { identify, signOut: superwallSignOut } = useUser();
 
   const refreshSession = async () => {
     try {
@@ -58,6 +60,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         isAuthenticated: !!session && !!user,
         isOnboarded: true,
       });
+
+      if (user?.id) {
+        await identify(user.id);
+      }
     } catch (error) {
       setAuthState({
         user: null,
@@ -66,12 +72,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         isAuthenticated: false,
         isOnboarded: false,
       });
+      await superwallSignOut();
     }
   };
 
   const handleSignOut = async () => {
     try {
       await signOut();
+      await superwallSignOut();
       setAuthState({
         user: null,
         session: null,

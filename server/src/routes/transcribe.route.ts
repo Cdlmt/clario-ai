@@ -4,6 +4,10 @@ import { uploadAudio } from '../middlewares/multer.middleware';
 import { TranscriptionService } from '../services/transcription.service';
 import { SessionService } from '../services/session.service';
 import { authenticateUser } from '../middlewares/auth.middleware';
+import {
+  checkUsageLimit,
+  incrementUsage,
+} from '../middlewares/usage.middleware';
 
 const router = Router();
 
@@ -11,7 +15,9 @@ const router = Router();
 router.post(
   '/',
   authenticateUser,
+  checkUsageLimit,
   uploadAudio,
+  incrementUsage,
   async (req: Request, res: Response) => {
     try {
       // Check if file was uploaded
