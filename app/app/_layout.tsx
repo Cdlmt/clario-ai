@@ -3,15 +3,18 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "../src/features/auth";
 import PaywallProvider from "../src/features/membership/providers/paywall.provider";
+import { MembershipProvider } from "../src/features/membership/context/MembershipContext";
 
 export default function RootLayout() {
   return (
     <PaywallProvider>
       <AuthProvider>
-        <SafeAreaProvider>
-          <StatusBar style="auto" />
-          <RootStack />
-        </SafeAreaProvider>
+        <MembershipProvider>
+          <SafeAreaProvider>
+            <StatusBar style="auto" />
+            <RootStack />
+          </SafeAreaProvider>
+        </MembershipProvider>
       </AuthProvider>
     </PaywallProvider>
   );

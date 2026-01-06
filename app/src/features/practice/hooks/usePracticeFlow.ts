@@ -7,6 +7,7 @@ import { analyzeAnswer } from '../services/analyzeAnswer.service';
 import { createQuestion, Question } from '../models/question';
 import { Feedback } from '../models/feedback';
 import { generateId } from '../../../shared/utils/generateId';
+import { useMembership } from '../../membership/hooks/useMembership';
 
 type UsePracticeFlowReturn = {
   isRecording: boolean;
@@ -42,6 +43,12 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
     setFeedback,
     setError,
   } = usePracticeSessionContext();
+  const {
+    canPerformAction,
+    showUpgradePrompt,
+    handleApiError,
+    refreshMembershipIfNeeded,
+  } = useMembership();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setLocalError] = useState<string | null>(null);
@@ -54,12 +61,33 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
   );
 
   const startPractice = useCallback(
-    (questionText: string, category?: string) => {
-      const question = createQuestion(questionText, category);
-      startSession(question);
-      router.push('/practice');
+    async (questionText: string, category?: string) => {
+      try {
+        // Refresh membership data if needed before checking limits
+        await refreshMembershipIfNeeded();
+
+        // Check if user can perform the transcribe action before starting
+        const canProceed = await canPerformAction('transcribe');
+        if (!canProceed) {
+          await showUpgradePrompt();
+          return;
+        }
+
+        const question = createQuestion(questionText, category);
+        startSession(question);
+        router.push('/practice');
+      } catch (error) {
+        console.error('Failed to start practice:', error);
+        setLocalError('Failed to start practice session');
+      }
     },
-    [startSession, router]
+    [
+      startSession,
+      router,
+      canPerformAction,
+      showUpgradePrompt,
+      refreshMembershipIfNeeded,
+    ]
   );
 
   const beginRecording = useCallback(async () => {
@@ -118,6 +146,14 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
 
         router.replace('/practice/feedback');
       } catch (err) {
+        // Check if this is a usage limit error and handle it
+        const isHandled = await handleApiError(err);
+        if (isHandled) {
+          // Paywall was shown, stop processing
+          setIsLoading(false);
+          return;
+        }
+
         const message =
           err instanceof Error ? err.message : 'An error occurred';
         setLocalError(message);
@@ -127,7 +163,7 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
         setIsLoading(false);
       }
     },
-    [setTranscript, setFeedback, setError, session, router]
+    [setTranscript, setFeedback, setError, session, router, handleApiError]
   );
 
   const finishRecording = useCallback(async () => {

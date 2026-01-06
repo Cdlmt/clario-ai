@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useReducer } from 'react';
+import { useCallback, useMemo, useReducer, useEffect } from 'react';
 import { Feedback } from '../models/feedback';
 import {
   AudioData,
@@ -6,6 +6,7 @@ import {
   PracticeSession,
 } from '../models/practiceSession';
 import { Question } from '../models/question';
+import { useMembershipContext } from '../../membership/context/MembershipContext';
 
 type Action =
   | { type: 'START_SESSION'; question: Question }
@@ -120,6 +121,7 @@ export type UsePracticeSessionReturn = {
 
 export function usePracticeSession(): UsePracticeSessionReturn {
   const [session, dispatch] = useReducer(reducer, undefined, createIdleSession);
+  const { refreshAfterSession } = useMembershipContext();
 
   const startSession = useCallback((question: Question) => {
     dispatch({ type: 'START_SESSION', question });
@@ -158,6 +160,13 @@ export function usePracticeSession(): UsePracticeSessionReturn {
     }),
     [session.status]
   );
+
+  // Refresh membership data when session completes (reaches feedback state)
+  useEffect(() => {
+    if (session.status === 'feedback') {
+      refreshAfterSession();
+    }
+  }, [session.status, refreshAfterSession]);
 
   return {
     session,

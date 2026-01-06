@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import {
   MembershipService,
   MembershipData,
   MembershipInfo,
   MembershipError,
 } from '../services/membership.service';
-import { usePlacement, useUser } from 'expo-superwall';
-import { SubscriptionStatus } from 'expo-superwall/compat';
+import { useUser } from 'expo-superwall';
 import usePaywall from './usePaywall';
+import { useMembershipContext } from '../context/MembershipContext';
 
 /**
  * Hook for managing user membership and usage limits
@@ -34,6 +34,7 @@ export interface UseMembershipReturn {
   isLoading: boolean;
   error: string | null;
   refreshMembership: () => Promise<void>;
+  refreshMembershipIfNeeded: () => Promise<void>;
   canPerformAction: (action: 'transcribe' | 'analyze') => Promise<boolean>;
   showUpgradePrompt: () => Promise<void>;
   upgradeToPremium: (customerId?: string) => Promise<void>;
@@ -41,30 +42,25 @@ export interface UseMembershipReturn {
 }
 
 export const useMembership = (): UseMembershipReturn => {
-  const [membership, setMembership] = useState<MembershipInfo | null>(null);
-  const [usage, setUsage] = useState<MembershipData['usage'] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    membership,
+    usage,
+    isLoading,
+    error,
+    refreshMembership: contextRefresh,
+    refreshMembershipIfNeeded: contextRefreshIfNeeded,
+  } = useMembershipContext();
   const { subscriptionStatus, setSubscriptionStatus } = useUser();
   const { showPaywall } = usePaywall();
 
+  // Use context refresh functions
   const refreshMembership = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
+    await contextRefresh();
+  }, [contextRefresh]);
 
-      const data = await MembershipService.getMembershipData();
-      setMembership(data.membership);
-      setUsage(data.usage);
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to load membership data';
-      setError(errorMessage);
-      console.error('Membership fetch error:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const refreshMembershipIfNeeded = useCallback(async () => {
+    await contextRefreshIfNeeded();
+  }, [contextRefreshIfNeeded]);
 
   const canPerformAction = useCallback(
     async (action: 'transcribe' | 'analyze'): Promise<boolean> => {
@@ -96,20 +92,14 @@ export const useMembership = (): UseMembershipReturn => {
   const upgradeToPremium = useCallback(
     async (customerId?: string) => {
       try {
-        setIsLoading(true);
         await MembershipService.upgradeToPremium(customerId);
         await setSubscriptionStatus({
           status: 'ACTIVE',
           entitlements: [{ id: 'pro', type: 'SERVICE_LEVEL' }],
         });
-        await refreshMembership(); // Refresh local state
+        await refreshMembership(); // Refresh global state
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : 'Failed to upgrade membership';
-        setError(errorMessage);
         throw err;
-      } finally {
-        setIsLoading(false);
       }
     },
     [refreshMembership]
@@ -145,16 +135,13 @@ export const useMembership = (): UseMembershipReturn => {
     [handleUsageLimitExceeded]
   );
 
-  useEffect(() => {
-    refreshMembership();
-  }, [refreshMembership]);
-
   return {
     membership,
     usage,
     isLoading,
     error,
     refreshMembership,
+    refreshMembershipIfNeeded,
     canPerformAction,
     showUpgradePrompt,
     upgradeToPremium,

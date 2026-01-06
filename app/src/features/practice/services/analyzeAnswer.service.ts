@@ -29,7 +29,11 @@ export async function analyzeAnswer(
 
   if (!response.ok) {
     const errorData: AnalyzeError = await response.json();
-    throw new Error(errorData.message || 'Failed to analyze answer');
+    const error = new Error(
+      errorData.message || 'Failed to analyze answer'
+    ) as any;
+    error.error = errorData.error;
+    throw error;
   }
 
   const data: AnalyzeResponse = await response.json();
