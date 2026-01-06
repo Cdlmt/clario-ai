@@ -31,6 +31,7 @@ router.get(
         )
       `
         )
+        .order('RANDOM()')
         .limit(1);
 
       if (error) {
@@ -110,6 +111,7 @@ router.get(
         `
         )
         .eq('category', categoryData.id)
+        .order('RANDOM()')
         .limit(1);
 
       if (error) {

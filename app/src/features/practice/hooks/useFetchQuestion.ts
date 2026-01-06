@@ -63,7 +63,7 @@ export function useFetchQuestion(category?: string): UseFetchQuestionReturn {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [session.status, loadQuestion]);
 
   return {
     question: existingQuestion,
