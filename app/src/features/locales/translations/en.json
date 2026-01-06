@@ -1,45 +1,75 @@
 {
-  "common": {
-    "buttons": {
-      "save": "Save",
-      "cancel": "Cancel",
-      "confirm": "Confirm",
-      "start": "Start",
-      "stop": "Stop",
-      "continue": "Continue",
-      "back": "Back",
-      "next": "Next"
-    },
-    "errors": {
-      "network": "Network error",
-      "unknown": "An unknown error occurred",
-      "permission": "Permission denied",
-      "timeout": "Request timed out"
-    },
+  "home": {
+    "title": "Practice your \ninterview 🧪",
+    "subtitle": "Answer one question, get instant feedback",
+    "startPractice": "Start practice ⚡️",
     "loading": "Loading...",
-    "retry": "Retry"
+    "dailyGoals": "🗓️ Daily goals",
+    "specificPractices": "🔓 Specific practices",
+    "practiceWithCompany": "Practice with questions {{company}} asks in interviews"
   },
-  "auth": {
-    "login": "Login",
-    "logout": "Logout",
-    "signUp": "Sign Up",
-    "email": "Email",
-    "password": "Password",
-    "forgotPassword": "Forgot password?",
-    "welcome": "Welcome"
+  "feedback": {
+    "clarity": "Clarity",
+    "weakWords": "Weak Words",
+    "listOfWords": "List of words",
+    "length": "Length",
+    "time": "Time ⏱️",
+    "target": "Target 🎯",
+    "keySuggestion": "Key Suggestion",
+    "confidenceIndicator": "Confidence Indicator",
+    "conciseness": "Conciseness"
   },
   "practice": {
-    "title": "Practice",
-    "startRecording": "Start Recording",
-    "stopRecording": "Stop Recording",
-    "recording": "Recording...",
-    "analyzing": "Analyzing your answer...",
-    "feedback": "Feedback",
-    "tryAgain": "Try Again"
+    "stop": "STOP",
+    "interviewQuestion": "Interview question",
+    "analyzingAnswer": "Analyzing answer",
+    "yourFeedback": "Your feedback",
+    "questionCategory": "Developer · Behavioral",
+    "startAnswering": "Start answering  🎙️️",
+    "nextQuestion": "Next question ⚡️",
+    "processingAnswer": "We're processing your answer...",
+    "usuallyTakesSeconds": "This usually takes a few seconds",
+    "reviewingClarity": "Reviewing clarity, length and language.",
+    "analyzingStructure": "Analyzing structure and wording.",
+    "evaluatingCoherence": "Evaluating coherence and conciseness.",
+    "recordingSpeakNow": "Recording... Speak now!",
+    "startSpeakingWhenReady": "You can start speaking when ready..",
+    "loadingQuestion": "Loading your question...",
+    "oops": "⚠️ Oops!",
+    "tapToRetry": "Tap to retry",
+    "takeFewSecondsToThink": "Take a few seconds to think before answering.",
+    "loadingFeedback": "Loading feedback..."
   },
-  "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "selectLanguage": "Select Language"
+  "streak": {
+    "streakDays": "Streak \ndays",
+    "totalAnswers": "Total \nanswers",
+    "avgLength": "Avg \nlength"
+  },
+  "onboarding": {
+    "landing": {
+      "title": "Practice, Improve & \nGet hired 🎉",
+      "subtitle": "Begin to train on what really matters, what companies really ask you ✅",
+      "getStarted": "Get started!"
+    },
+    "name": {
+      "title": "First, \nWhat's your name ?",
+      "continue": "Continue",
+      "firstName": "First name",
+      "placeholder": "John"
+    },
+    "success": {
+      "title": "You're all set! ✅",
+      "subtitle": "Now start your practice to more likely get hired.",
+      "letsGo": "Let's goooo!"
+    },
+    "error": {
+      "title": "Oops! Something went wrong. ⁉️"
+    },
+    "signup": {
+      "title": "Last, \nSave your progress! 🎯",
+      "subtitle": "By creating an account, your progress will be saved day after day. You'll be more likely to get hired.",
+      "signingIn": "Signing you in..."
+    },
+    "continueWith": "Continue with {{provider}}"
   }
 }

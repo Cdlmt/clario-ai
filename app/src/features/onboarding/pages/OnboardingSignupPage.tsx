@@ -3,15 +3,17 @@ import Text from "../../../shared/ui/text";
 import { colors, gaps } from "../../../shared/constants/theme";
 import SocialLoginButton from "../components/social.login.button";
 import { useOnboarding } from "../hooks/useOnboarding";
+import { useTranslation } from "../../locales";
 
 export const OnboardingSignupPage = () => {
   const { handleSocialLogin, isLoading } = useOnboarding();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text variant="body" weight="regular">Signing you in...</Text>
+        <Text variant="body" weight="regular">{t('onboarding:signup:signingIn')}</Text>
       </View>
     );
   }
@@ -19,9 +21,9 @@ export const OnboardingSignupPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text variant="h2" weight="bold">{"Last, \nSave your progress! 🎯"}</Text>
+        <Text variant="h2" weight="bold">{t('onboarding:signup:title')}</Text>
         <Text variant="body" weight="regular" color={colors.black}>
-          By creating an account, your progress will be saved day after day. You'll be more likely to get hired.
+          {t('onboarding:signup:subtitle')}
         </Text>
       </View>
       <View style={styles.buttonsContainer}>

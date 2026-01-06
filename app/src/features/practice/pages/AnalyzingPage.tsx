@@ -2,9 +2,11 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Text from '../../../shared/ui/text';
 import { colors, gaps } from '../../../shared/constants/theme';
+import { useTranslation } from '../../locales';
 
 export default function AnalyzingPage() {
   const [timeSpent, setTimeSpent] = useState(0);
+  const { t } = useTranslation();
 
   // Animate the progress indicators
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function AnalyzingPage() {
           color={colors.white}
           style={styles.text}
         >
-          We're processing your answer...
+          {t('practice:processingAnswer')}
         </Text>
         <Text
           variant="largeBody"
@@ -32,7 +34,7 @@ export default function AnalyzingPage() {
           color={colors.white}
           style={styles.text}
         >
-          This usually takes a few seconds
+          {t('practice:usuallyTakesSeconds')}
         </Text>
       </View>
       <ActivityIndicator size="large" color={colors.white} />
@@ -43,7 +45,7 @@ export default function AnalyzingPage() {
           color={colors.white}
           style={styles.text}
         >
-          Reviewing clarity, length and language.
+          {t('practice:reviewingClarity')}
         </Text>
         <Text
           variant="largeBody"
@@ -51,7 +53,7 @@ export default function AnalyzingPage() {
           color={timeSpent > 2 ? colors.white : colors.darkGray}
           style={styles.text}
         >
-          Analyzing structure and wording.
+          {t('practice:analyzingStructure')}
         </Text>
         <Text
           variant="largeBody"
@@ -59,7 +61,7 @@ export default function AnalyzingPage() {
           color={timeSpent > 4 ? colors.white : colors.darkGray}
           style={styles.text}
         >
-          Evaluating coherence and conciseness.
+          {t('practice:evaluatingCoherence')}
         </Text>
       </View>
     </View>

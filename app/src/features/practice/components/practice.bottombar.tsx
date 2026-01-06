@@ -6,15 +6,17 @@ import Button from '../../../shared/ui/button';
 import Text from '../../../shared/ui/text';
 import { usePathname, useRouter } from 'expo-router';
 import { usePracticeSessionContext } from '../context/PracticeSessionContext';
+import { useTranslation } from '../../locales';
 
 const BUTTON_COLOR = {
   "/practice": colors.secondary,
   "/practice/feedback": colors.primary,
 }
 
-const BUTTON_TEXT = {
-  "/practice": "Start answering  🎙️️",
-  "/practice/feedback": "Next question ⚡️",
+// Note: This config uses keys that will be resolved with t() in the component
+const BUTTON_TEXT_KEYS = {
+  "/practice": "practice:startAnswering",
+  "/practice/feedback": "practice:nextQuestion",
 }
 
 const BUTTON_ROUTES = {
@@ -27,9 +29,11 @@ export default function PracticeBottomBar() {
   const router = useRouter();
   const pathname = usePathname();
   const { reset } = usePracticeSessionContext();
+  const { t } = useTranslation();
 
   const buttonColor = BUTTON_COLOR[pathname as keyof typeof BUTTON_COLOR] ?? colors.primary;
-  const buttonText = BUTTON_TEXT[pathname as keyof typeof BUTTON_TEXT] ?? "Start answering  🎙️️";
+  const buttonTextKey = BUTTON_TEXT_KEYS[pathname as keyof typeof BUTTON_TEXT_KEYS] ?? "practice:startAnswering";
+  const buttonText = t(buttonTextKey);
   const buttonRoute = BUTTON_ROUTES[pathname as keyof typeof BUTTON_ROUTES] ?? "/practice/answer";
 
   const handleStartAnswer = () => {

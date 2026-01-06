@@ -12,5 +12,6 @@ export {
   setStoredLanguage,
 } from './services/i18n';
 
-// Language provider and hook
-export { LanguageProvider, useLanguage } from './provders/language.provider';
+// Hooks and components
+export { useTranslation } from './hooks/useTranslation';
+export { LanguageProvider, useLanguage } from './components/languageProvider';

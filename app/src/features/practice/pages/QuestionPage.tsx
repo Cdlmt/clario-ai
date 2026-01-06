@@ -5,6 +5,7 @@ import { gaps, heights } from '../../../shared/constants/theme';
 import ProgressBar from '../components/progress.bar';
 import { usePathname, useRouter } from 'expo-router';
 import { useFetchQuestion } from '../hooks/useFetchQuestion';
+import { useTranslation } from '../../locales';
 
 const INITIAL_TIMER = 30;
 
@@ -12,6 +13,7 @@ export default function QuestionPage() {
   const pathname = usePathname();
   const router = useRouter();
   const { question, isLoading, error, refetch } = useFetchQuestion();
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIMER);
 
   const handleStartAnswer = () => {
@@ -41,7 +43,7 @@ export default function QuestionPage() {
         <View style={styles.loadingContent}>
           <ActivityIndicator size="large" color="#fff" />
           <Text variant="body" weight="medium">
-            Loading your question...
+            {t('practice:loadingQuestion')}
           </Text>
         </View>
       </View>
@@ -53,7 +55,7 @@ export default function QuestionPage() {
       <View style={styles.container}>
         <View style={styles.errorContent}>
           <Text variant="h2" weight="bold">
-            ⚠️ Oops!
+            {t('practice:oops')}
           </Text>
           <Text variant="body" weight="medium">
             {error}
@@ -64,7 +66,7 @@ export default function QuestionPage() {
             onPress={refetch}
             style={styles.retryButton}
           >
-            Tap to retry
+            {t('practice:tapToRetry')}
           </Text>
         </View>
       </View>
@@ -79,7 +81,7 @@ export default function QuestionPage() {
             "{question?.text}"
           </Text>
           <Text variant="body" weight="medium">
-            Take a few seconds to think before answering.
+            {t('practice:takeFewSecondsToThink')}
           </Text>
         </View>
         <View style={styles.progressBarContainer}>

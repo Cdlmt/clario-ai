@@ -3,6 +3,7 @@ import React from 'react'
 import { colors, gaps } from '../../../../shared/constants/theme'
 import Text from '../../../../shared/ui/text'
 import FeedbackScore from './feedback.score'
+import { useTranslation } from '../../../locales'
 
 type LengthFeedbackProps = {
   rating: number;
@@ -13,10 +14,11 @@ type LengthFeedbackProps = {
 
 export default function LengthFeedback(props: LengthFeedbackProps) {
   const { rating, durationSeconds, durationTargetSeconds, comment } = props;
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text variant="largeBody" weight="medium">Length</Text>
+      <Text variant="largeBody" weight="medium">{t('feedback:length')}</Text>
       <View style={styles.content}>
         <FeedbackScore score={rating} />
         <View style={styles.feedbackContainer}>
@@ -25,11 +27,11 @@ export default function LengthFeedback(props: LengthFeedbackProps) {
       </View>
       <View style={styles.content}>
         <View style={styles.durationContainer}>
-          <Text variant="body" weight="bold">Time ⏱️</Text>
+          <Text variant="body" weight="bold">{t('feedback:time')}</Text>
           <Text variant="body" weight="medium">{durationSeconds}s</Text>
         </View>
         <View style={styles.durationContainer}>
-          <Text variant="body" weight="bold">Target 🎯</Text>
+          <Text variant="body" weight="bold">{t('feedback:target')}</Text>
           <Text variant="body" weight="medium">{durationTargetSeconds}s</Text>
         </View>
       </View>

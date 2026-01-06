@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { colors, gaps } from '../../../../shared/constants/theme'
 import Text from '../../../../shared/ui/text'
+import { useTranslation } from '../../../locales'
 
 type KeySuggestionFeedbackProps = {
   suggestion: string;
@@ -9,10 +10,11 @@ type KeySuggestionFeedbackProps = {
 
 export default function KeySuggestionFeedback(props: KeySuggestionFeedbackProps) {
   const { suggestion } = props;
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text variant="largeBody" weight="medium">Key Suggestion</Text>
+      <Text variant="largeBody" weight="medium">{t('feedback:keySuggestion')}</Text>
       <View style={styles.feedbackContainer}>
         <Text variant="body" weight="medium">{suggestion}</Text>
       </View>

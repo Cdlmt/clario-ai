@@ -1,50 +1,81 @@
 export type SupportedLanguage = 'en' | 'fr' | 'es';
 
 export interface TranslationResources {
-  common: {
-    buttons: {
-      save: string;
-      cancel: string;
-      confirm: string;
-      start: string;
-      stop: string;
-      continue: string;
-      back: string;
-      next: string;
-    };
-    errors: {
-      network: string;
-      unknown: string;
-      permission: string;
-      timeout: string;
-    };
+  home: {
+    title: string;
+    subtitle: string;
+    startPractice: string;
     loading: string;
-    retry: string;
+    dailyGoals: string;
+    specificPractices: string;
+    practiceWithCompany: string;
   };
-  auth: {
-    login: string;
-    logout: string;
-    signUp: string;
-    email: string;
-    password: string;
-    forgotPassword: string;
-    welcome: string;
+  onboarding: {
+    landing: {
+      title: string;
+      subtitle: string;
+      getStarted: string;
+    };
+    name: {
+      title: string;
+      continue: string;
+      firstName: string;
+      placeholder: string;
+    };
+    success: {
+      title: string;
+      subtitle: string;
+      letsGo: string;
+    };
+    error: {
+      title: string;
+    };
+    signup: {
+      title: string;
+      subtitle: string;
+      signingIn: string;
+    };
+    continueWith: string;
+  };
+  feedback: {
+    clarity: string;
+    weakWords: string;
+    listOfWords: string;
+    length: string;
+    time: string;
+    target: string;
+    keySuggestion: string;
+    confidenceIndicator: string;
+    conciseness: string;
   };
   practice: {
-    title: string;
-    startRecording: string;
-    stopRecording: string;
-    recording: string;
-    analyzing: string;
-    feedback: string;
-    tryAgain: string;
+    stop: string;
+    interviewQuestion: string;
+    analyzingAnswer: string;
+    yourFeedback: string;
+    questionCategory: string;
+    startAnswering: string;
+    nextQuestion: string;
+    processingAnswer: string;
+    usuallyTakesSeconds: string;
+    reviewingClarity: string;
+    analyzingStructure: string;
+    evaluatingCoherence: string;
+    recordingSpeakNow: string;
+    startSpeakingWhenReady: string;
+    loadingQuestion: string;
+    oops: string;
+    tapToRetry: string;
+    takeFewSecondsToThink: string;
+    loadingFeedback: string;
   };
-  settings: {
-    title: string;
-    language: string;
-    selectLanguage: string;
+  streak: {
+    streakDays: string;
+    totalAnswers: string;
+    avgLength: string;
   };
 }
 
 export type TranslationKey = keyof TranslationResources;
-export type NestedTranslationKey<T extends TranslationKey> = keyof TranslationResources[T];
+export type NestedTranslationKey<T extends TranslationKey> =
+  keyof TranslationResources[T];

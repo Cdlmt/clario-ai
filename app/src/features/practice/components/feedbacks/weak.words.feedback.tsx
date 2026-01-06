@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { colors, gaps } from '../../../../shared/constants/theme'
 import Text from '../../../../shared/ui/text'
+import { useTranslation } from '../../../locales'
 import FeedbackScore from './feedback.score'
 import { WeakWord } from '../../models/feedback'
 
@@ -13,10 +14,11 @@ type WeakWordsFeedbackProps = {
 
 export default function WeakWordsFeedback(props: WeakWordsFeedbackProps) {
   const { rating, words, comment } = props;
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text variant="largeBody" weight="medium">Weak Words</Text>
+      <Text variant="largeBody" weight="medium">{t('feedback:weakWords')}</Text>
       <View style={styles.content}>
         <FeedbackScore score={rating} />
         <View style={styles.feedbackContainer}>
@@ -24,7 +26,7 @@ export default function WeakWordsFeedback(props: WeakWordsFeedbackProps) {
         </View>
       </View>
       <View style={styles.wordsContainer}>
-        <Text variant="body" weight="bold">List of words</Text>
+        <Text variant="body" weight="bold">{t('feedback:listOfWords')}</Text>
         <View style={styles.wordsList}>
           {words.map((word) => (
             <Text variant="body" weight="medium" key={word.word}>{word.word} ({word.count}x)</Text>

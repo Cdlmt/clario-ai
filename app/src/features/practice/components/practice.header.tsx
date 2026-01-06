@@ -4,12 +4,14 @@ import { usePathname } from 'expo-router';
 import { colors, gaps, paddings } from '../../../shared/constants/theme';
 import Text from '../../../shared/ui/text';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from '../../locales';
 
-const STEPS_CONFIG = {
-  "/practice": "Interview question",
-  "/practice/answer": "Interview question",
-  "/practice/analyzing": "Analyzing answer",
-  "/practice/feedback": "Your feedback",
+// Note: This config uses keys that will be resolved with t() in the component
+const STEPS_CONFIG_KEYS = {
+  "/practice": "practice:interviewQuestion",
+  "/practice/answer": "practice:interviewQuestion",
+  "/practice/analyzing": "practice:analyzingAnswer",
+  "/practice/feedback": "practice:yourFeedback",
 } as const;
 
 type PracticeHeaderProps = {
@@ -18,10 +20,12 @@ type PracticeHeaderProps = {
 
 export default function PracticeHeader(props: PracticeHeaderProps) {
   const { theme } = props;
+  const { t } = useTranslation();
 
   const pathname = usePathname();
-  const title = STEPS_CONFIG[pathname as keyof typeof STEPS_CONFIG] ?? "Interview question";
-  const questionCategory = "Developer · Behavioral";
+  const titleKey = STEPS_CONFIG_KEYS[pathname as keyof typeof STEPS_CONFIG_KEYS] ?? "practice:interviewQuestion";
+  const title = t(titleKey);
+  const questionCategory = t('practice:questionCategory');
   const insets = useSafeAreaInsets();
 
   return (

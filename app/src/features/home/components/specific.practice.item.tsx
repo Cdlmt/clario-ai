@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native'
 import Text from '../../../shared/ui/text';
 import { Feather } from '@expo/vector-icons';
+import { useTranslation } from '../../locales';
 
 type SpecificPracticeItemProps = {
   icon: ImageSourcePropType;
@@ -12,6 +13,7 @@ type SpecificPracticeItemProps = {
 
 export default function SpecificPracticeItem(props: SpecificPracticeItemProps) {
   const { icon, name, backgroundColor, color } = props;
+  const { t } = useTranslation();
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
@@ -21,7 +23,7 @@ export default function SpecificPracticeItem(props: SpecificPracticeItemProps) {
         </View>
         <View style={styles.textContainer}>
           <Text variant="largeBody" weight="medium" color={color} style={{ lineHeight: 16 }}>{name}</Text>
-          <Text variant="text" weight="regular" color={color}>Practice with questions {name} ask in interview</Text>
+          <Text variant="text" weight="regular" color={color}>{t('home:practiceWithCompany', { company: name })}</Text>
         </View>
       </View>
       <Feather name="chevron-right" size={24} color={color} />

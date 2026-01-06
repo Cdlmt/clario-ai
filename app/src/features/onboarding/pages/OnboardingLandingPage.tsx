@@ -4,10 +4,12 @@ import Text from "../../../shared/ui/text";
 import { colors, paddings } from "../../../shared/constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useOnboarding } from "../hooks/useOnboarding";
+import { useTranslation } from "../../locales";
 
 export const OnboardingLandingPage = () => {
   const insets = useSafeAreaInsets();
   const { goToNameStep } = useOnboarding();
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
@@ -17,14 +19,14 @@ export const OnboardingLandingPage = () => {
       </View>
 
       <View style={[styles.content, { paddingBottom: insets.bottom + paddings.vertical }]}>
-        <Text variant="h2" weight="bold" style={styles.title}>{`Practice, Improve & \nGet hired 🎉`}</Text>
+        <Text variant="h2" weight="bold" style={styles.title}>{t('onboarding:landing:title')}</Text>
 
         <Text variant="body" weight="regular" style={styles.subtitle}>
-          Begin to train on what really matters, what companies really ask you ✅
+          {t('onboarding:landing:subtitle')}
         </Text>
 
         <Button onPress={goToNameStep}>
-          <Text variant="body" weight="bold" color={colors.white}>Get started!</Text>
+          <Text variant="body" weight="bold" color={colors.white}>{t('onboarding:landing:getStarted')}</Text>
         </Button>
       </View>
     </View>

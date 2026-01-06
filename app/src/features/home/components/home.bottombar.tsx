@@ -5,10 +5,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Button from '../../../shared/ui/button';
 import Text from '../../../shared/ui/text';
 import { useRouter } from 'expo-router';
+import { useTranslation } from '../../locales';
 
 export default function HomeBottomBar() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const handleStartPractice = () => {
     router.push("/practice");
@@ -17,7 +19,7 @@ export default function HomeBottomBar() {
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom, height: heights.bottomBar + insets.bottom }]}>
       <Button onPress={handleStartPractice} style={{ backgroundColor: colors.primary }}>
-        <Text variant="body" weight="bold" color={colors.white}>Start practice ⚡️</Text>
+        <Text variant="body" weight="bold" color={colors.white}>{t('home:startPractice')}</Text>
       </Button>
     </View>
   )

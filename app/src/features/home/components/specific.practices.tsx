@@ -9,11 +9,14 @@ import StripeIcon from '../../../shared/assets/logos/stripe.png';
 import AnthropicIcon from '../../../shared/assets/logos/anthropic.png';
 import NetflixIcon from '../../../shared/assets/logos/netflix.png';
 import SpecificPracticeItem from './specific.practice.item';
+import { useTranslation } from '../../locales';
 
 export default function SpecificPractices() {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <Text variant="largeBody" weight="medium">🔓 Specific practices</Text>
+      <Text variant="largeBody" weight="medium">{t('home:specificPractices')}</Text>
       <SpecificPracticeItem icon={SpotifyIcon} name="Spotify" backgroundColor="#1DB954" color={colors.white} />
       <SpecificPracticeItem icon={GoogleIcon} name="Google" backgroundColor={colors.lightGray} color={colors.black} />
       <SpecificPracticeItem icon={StripeIcon} name="Stripe" backgroundColor="#5433FF" color={colors.white} />

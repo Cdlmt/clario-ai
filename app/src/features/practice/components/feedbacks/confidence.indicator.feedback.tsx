@@ -3,6 +3,7 @@ import React from 'react'
 import { colors, gaps } from '../../../../shared/constants/theme'
 import Text from '../../../../shared/ui/text'
 import FeedbackScore from './feedback.score'
+import { useTranslation } from '../../../locales'
 
 type ConfidenceIndicatorFeedbackProps = {
   rating: number;
@@ -11,10 +12,11 @@ type ConfidenceIndicatorFeedbackProps = {
 
 export default function ConfidenceIndicatorFeedback(props: ConfidenceIndicatorFeedbackProps) {
   const { rating, comment } = props;
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text variant="largeBody" weight="medium">Confidence Indicator</Text>
+      <Text variant="largeBody" weight="medium">{t('feedback:confidenceIndicator')}</Text>
       <View style={styles.content}>
         <FeedbackScore score={rating} />
         <View style={styles.feedbackContainer}>

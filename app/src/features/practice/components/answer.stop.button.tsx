@@ -2,16 +2,19 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import Text from '../../../shared/ui/text'
 import { colors } from '../../../shared/constants/theme'
+import { useTranslation } from '../../locales'
 
 type AnswerStopButtonProps = {
   onPress?: () => void
 }
 
 export default function AnswerStopButton({ onPress }: AnswerStopButtonProps) {
+  const { t } = useTranslation();
+
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.content}>
-        <Text variant="body" weight="bold" color={colors.white}>STOP</Text>
+        <Text variant="body" weight="bold" color={colors.white}>{t('practice:stop')}</Text>
       </View>
     </TouchableOpacity>
   )

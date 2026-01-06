@@ -9,16 +9,18 @@ import LengthFeedback from '../components/feedbacks/length.feedback';
 import WeakWordsFeedback from '../components/feedbacks/weak.words.feedback';
 import { usePracticeSessionContext } from '../context/PracticeSessionContext';
 import Text from '../../../shared/ui/text';
+import { useTranslation } from '../../locales';
 
 export default function FeedbackPage() {
   const { session } = usePracticeSessionContext();
+  const { t } = useTranslation();
 
   // Handle error state
   if (session.status === 'error') {
     return (
       <View style={styles.errorContainer}>
         <Text variant="h1" weight="bold" color={colors.black}>
-          Oops!
+          {t('practice:oops')}
         </Text>
         <Text variant="body" weight="medium" color={colors.black}>
           {session.errorMessage}
@@ -32,7 +34,7 @@ export default function FeedbackPage() {
     return (
       <View style={styles.errorContainer}>
         <Text variant="body" weight="medium" color={colors.black}>
-          Loading feedback...
+          {t('practice:loadingFeedback')}
         </Text>
       </View>
     );

@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import FacebookIcon from '../../../shared/assets/logos/facebook.png';
 import GoogleIcon from '../../../shared/assets/logos/google.png';
 import AppleIcon from '../../../shared/assets/logos/apple.png';
+import { useTranslation } from "../../locales";
 
 type SocialLoginProvider = 'facebook' | 'google' | 'apple';
 
@@ -21,13 +22,14 @@ const providerIcons: Record<SocialLoginProvider, ImageSourcePropType> = {
 
 export default function SocialLoginButton(props: SocialLoginButtonProps) {
   const { provider, onPress } = props;
+  const { t } = useTranslation();
 
   const providerText = useMemo(() => provider.charAt(0).toUpperCase() + provider.slice(1), [provider]);
 
   return (
     <TouchableOpacity style={[styles.container, stylesColors[provider]]} onPress={onPress}>
       <Image source={providerIcons[provider]} style={styles.icon} resizeMode="contain" />
-      <Text variant="body" weight="bold" style={stylesText[provider]}>Continue with {providerText}</Text>
+      <Text variant="body" weight="bold" style={stylesText[provider]}>{t('onboarding:continueWith', { provider: providerText })}</Text>
     </TouchableOpacity>
   );
 }

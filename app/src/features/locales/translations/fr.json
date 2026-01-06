@@ -1,45 +1,75 @@
 {
-  "common": {
-    "buttons": {
-      "save": "Enregistrer",
-      "cancel": "Annuler",
-      "confirm": "Confirmer",
-      "start": "Commencer",
-      "stop": "Arrêter",
-      "continue": "Continuer",
-      "back": "Retour",
-      "next": "Suivant"
-    },
-    "errors": {
-      "network": "Erreur réseau",
-      "unknown": "Une erreur inconnue s'est produite",
-      "permission": "Permission refusée",
-      "timeout": "Délai d'attente dépassé"
-    },
+  "home": {
+    "title": "Entraîne-toi à \nl'entretien 🧪",
+    "subtitle": "Réponds à une question, reçois un retour instantané",
+    "startPractice": "Commencer l'entraînement ⚡️",
     "loading": "Chargement...",
-    "retry": "Réessayer"
+    "dailyGoals": "🗓️ Objectifs quotidiens",
+    "specificPractices": "🔓 Pratiques spécifiques",
+    "practiceWithCompany": "Entraîne-toi avec les questions que {{company}} pose en entretien"
   },
-  "auth": {
-    "login": "Connexion",
-    "logout": "Déconnexion",
-    "signUp": "S'inscrire",
-    "email": "Email",
-    "password": "Mot de passe",
-    "forgotPassword": "Mot de passe oublié ?",
-    "welcome": "Bienvenue"
+  "feedback": {
+    "clarity": "Clarté",
+    "weakWords": "Mots faibles",
+    "listOfWords": "Liste des mots",
+    "length": "Longueur",
+    "time": "Temps ⏱️",
+    "target": "Objectif 🎯",
+    "keySuggestion": "Suggestion clé",
+    "confidenceIndicator": "Indicateur de confiance",
+    "conciseness": "Concision"
   },
   "practice": {
-    "title": "Entraînement",
-    "startRecording": "Commencer l'enregistrement",
-    "stopRecording": "Arrêter l'enregistrement",
-    "recording": "Enregistrement en cours...",
-    "analyzing": "Analyse de votre réponse...",
-    "feedback": "Retour d'expérience",
-    "tryAgain": "Réessayer"
+    "stop": "STOP",
+    "interviewQuestion": "Question d'entretien",
+    "analyzingAnswer": "Analyse de la réponse",
+    "yourFeedback": "Votre retour",
+    "questionCategory": "Développeur · Comportemental",
+    "startAnswering": "Commencer à répondre  🎙️️",
+    "nextQuestion": "Question suivante ⚡️",
+    "processingAnswer": "Nous traitons votre réponse...",
+    "usuallyTakesSeconds": "Cela prend généralement quelques secondes",
+    "reviewingClarity": "Examen de la clarté, de la longueur et du langage.",
+    "analyzingStructure": "Analyse de la structure et du choix des mots.",
+    "evaluatingCoherence": "Évaluation de la cohérence et de la concision.",
+    "recordingSpeakNow": "Enregistrement... Parlez maintenant !",
+    "startSpeakingWhenReady": "Vous pouvez commencer à parler quand vous êtes prêt..",
+    "loadingQuestion": "Chargement de votre question...",
+    "oops": "⚠️ Oups !",
+    "tapToRetry": "Appuyez pour réessayer",
+    "takeFewSecondsToThink": "Prenez quelques secondes pour réfléchir avant de répondre.",
+    "loadingFeedback": "Chargement du retour..."
   },
-  "settings": {
-    "title": "Paramètres",
-    "language": "Langue",
-    "selectLanguage": "Sélectionner la langue"
+  "streak": {
+    "streakDays": "Série de \njours",
+    "totalAnswers": "Total de \nréponses",
+    "avgLength": "Durée \nmoyenne"
+  },
+  "onboarding": {
+    "landing": {
+      "title": "Entraîne-toi, améliore-toi & \nDécroche le poste 🎉",
+      "subtitle": "Commence à t'entraîner sur ce qui compte vraiment, ce que les entreprises te demandent vraiment ✅",
+      "getStarted": "Commencer !"
+    },
+    "name": {
+      "title": "Tout d'abord, \nQuel est votre prénom ?",
+      "continue": "Continuer",
+      "firstName": "Prénom",
+      "placeholder": "Jean"
+    },
+    "success": {
+      "title": "Tout est prêt ! ✅",
+      "subtitle": "Maintenant commence ton entraînement pour avoir plus de chances d'être embauché.",
+      "letsGo": "C'est parti !"
+    },
+    "error": {
+      "title": "Oups ! Quelque chose s'est mal passé. ⁉️"
+    },
+    "signup": {
+      "title": "Enfin, \nSauvegarde tes progrès ! 🎯",
+      "subtitle": "En créant un compte, tes progrès seront sauvegardés jour après jour. Tu auras plus de chances d'être embauché.",
+      "signingIn": "Connexion en cours..."
+    },
+    "continueWith": "Continuer avec {{provider}}"
   }
 }

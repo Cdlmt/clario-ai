@@ -3,6 +3,7 @@ import React from 'react'
 import { colors, gaps } from '../../../../shared/constants/theme'
 import Text from '../../../../shared/ui/text'
 import FeedbackScore from './feedback.score'
+import { useTranslation } from '../../../locales'
 
 type ClarityFeedbackProps = {
   rating: number;
@@ -11,10 +12,11 @@ type ClarityFeedbackProps = {
 
 export default function ClarityFeedback(props: ClarityFeedbackProps) {
   const { rating, comment } = props;
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text variant="largeBody" weight="medium">Clarity</Text>
+      <Text variant="largeBody" weight="medium">{t('feedback:clarity')}</Text>
       <View style={styles.content}>
         <FeedbackScore score={rating} />
         <View style={styles.feedbackContainer}>

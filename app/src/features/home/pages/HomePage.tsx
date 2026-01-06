@@ -6,13 +6,16 @@ import Divider from '../../../shared/components/divider';
 import DailyGoals from '../components/daily.goals';
 import SpecificPractices from '../components/specific.practices';
 import StreakCards from '../components/streak.cards';
+import { useTranslation } from '../../locales';
 
 export default function HomePage() {
+  const { t } = useTranslation();
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
       <View style={styles.titleContainer}>
-        <Text variant="h2" weight="bold">{`Practice your \ninterview 🧪`}</Text>
-        <Text variant="largeBody" weight="medium">Answer one question, get instant feedback</Text>
+        <Text variant="h2" weight="bold">{t('home:title')}</Text>
+        <Text variant="largeBody" weight="medium">{t('home:subtitle')}</Text>
       </View>
       <Divider />
       <DailyGoals />

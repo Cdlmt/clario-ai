@@ -2,16 +2,18 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import StreakCardItem from './streak.card.item'
 import { useStreakStats } from '../hooks/useStreakStats'
+import { useTranslation } from '../../locales'
 
 export default function StreakCards() {
   const { streakStats, isLoading } = useStreakStats();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <StreakCardItem value="..." label={'Streak \ndays'} icon="🔥" />
-        <StreakCardItem value="..." label={'Total \nanswers'} icon="⚡️" />
-        <StreakCardItem value="..." label={'Avg \nlength'} icon="⏱️" />
+        <StreakCardItem value="..." label={t('streak:streakDays')} icon="🔥" />
+        <StreakCardItem value="..." label={t('streak:totalAnswers')} icon="⚡️" />
+        <StreakCardItem value="..." label={t('streak:avgLength')} icon="⏱️" />
       </View>
     );
   }
@@ -20,17 +22,17 @@ export default function StreakCards() {
     <View style={styles.container}>
       <StreakCardItem
         value={streakStats.currentStreak.toString()}
-        label={'Streak \ndays'}
+        label={t('streak:streakDays')}
         icon="🔥"
       />
       <StreakCardItem
         value={streakStats.totalAnswers.toString()}
-        label={'Total \nanswers'}
+        label={t('streak:totalAnswers')}
         icon="⚡️"
       />
       <StreakCardItem
         value={streakStats.averageLength}
-        label={'Avg \nlength'}
+        label={t('streak:avgLength')}
         icon="⏱️"
       />
     </View>

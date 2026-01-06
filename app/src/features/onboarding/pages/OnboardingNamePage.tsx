@@ -5,9 +5,11 @@ import { colors, gaps } from "../../../shared/constants/theme";
 import Button from "../../../shared/ui/button";
 import { useState } from "react";
 import { useOnboarding } from "../hooks/useOnboarding";
+import { useTranslation } from "../../locales";
 
 export const OnboardingNamePage = () => {
   const { data, handleNameSubmit } = useOnboarding();
+  const { t } = useTranslation();
   const [name, setName] = useState(data.name);
 
   const handleContinue = () => {
@@ -17,17 +19,17 @@ export const OnboardingNamePage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text variant="h2" weight="bold">{"First, \nWhat's your name ?"}</Text>
+        <Text variant="h2" weight="bold">{t('onboarding:name:title')}</Text>
         <Input
-          label="First name"
+          label={t('onboarding:name:firstName')}
           icon="user"
-          placeholder="John"
+          placeholder={t('onboarding:name:placeholder')}
           value={name}
           onChangeText={setName}
         />
       </View>
       <Button onPress={handleContinue} disabled={!name.trim()}>
-        <Text variant="body" weight="bold" color={colors.white}>Continue</Text>
+        <Text variant="body" weight="bold" color={colors.white}>{t('onboarding:name:continue')}</Text>
       </Button>
     </View>
   );

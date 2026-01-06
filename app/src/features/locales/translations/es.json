@@ -1,45 +1,75 @@
 {
-  "common": {
-    "buttons": {
-      "save": "Guardar",
-      "cancel": "Cancelar",
-      "confirm": "Confirmar",
-      "start": "Iniciar",
-      "stop": "Detener",
-      "continue": "Continuar",
-      "back": "Atrás",
-      "next": "Siguiente"
-    },
-    "errors": {
-      "network": "Error de red",
-      "unknown": "Ocurrió un error desconocido",
-      "permission": "Permiso denegado",
-      "timeout": "Tiempo de espera agotado"
-    },
+  "home": {
+    "title": "Practica tu \nentrevista 🧪",
+    "subtitle": "Responde una pregunta, obtén retroalimentación instantánea",
+    "startPractice": "Comenzar práctica ⚡️",
     "loading": "Cargando...",
-    "retry": "Reintentar"
+    "dailyGoals": "🗓️ Objetivos diarios",
+    "specificPractices": "🔓 Prácticas específicas",
+    "practiceWithCompany": "Practica con preguntas que {{company}} hace en entrevistas"
   },
-  "auth": {
-    "login": "Iniciar sesión",
-    "logout": "Cerrar sesión",
-    "signUp": "Registrarse",
-    "email": "Correo electrónico",
-    "password": "Contraseña",
-    "forgotPassword": "¿Olvidaste tu contraseña?",
-    "welcome": "Bienvenido"
+  "feedback": {
+    "clarity": "Claridad",
+    "weakWords": "Palabras débiles",
+    "listOfWords": "Lista de palabras",
+    "length": "Longitud",
+    "time": "Tiempo ⏱️",
+    "target": "Objetivo 🎯",
+    "keySuggestion": "Sugerencia clave",
+    "confidenceIndicator": "Indicador de confianza",
+    "conciseness": "Concisión"
   },
   "practice": {
-    "title": "Práctica",
-    "startRecording": "Iniciar grabación",
-    "stopRecording": "Detener grabación",
-    "recording": "Grabando...",
-    "analyzing": "Analizando tu respuesta...",
-    "feedback": "Retroalimentación",
-    "tryAgain": "Intentar de nuevo"
+    "stop": "STOP",
+    "interviewQuestion": "Pregunta de entrevista",
+    "analyzingAnswer": "Analizando respuesta",
+    "yourFeedback": "Tu retroalimentación",
+    "questionCategory": "Desarrollador · Conductual",
+    "startAnswering": "Comenzar a responder  🎙️️",
+    "nextQuestion": "Siguiente pregunta ⚡️",
+    "processingAnswer": "Estamos procesando tu respuesta...",
+    "usuallyTakesSeconds": "Esto generalmente toma unos segundos",
+    "reviewingClarity": "Revisando claridad, longitud e idioma.",
+    "analyzingStructure": "Analizando estructura y redacción.",
+    "evaluatingCoherence": "Evaluando coherencia y concisión.",
+    "recordingSpeakNow": "Grabando... ¡Habla ahora!",
+    "startSpeakingWhenReady": "Puedes empezar a hablar cuando estés listo..",
+    "loadingQuestion": "Cargando tu pregunta...",
+    "oops": "⚠️ ¡Ups!",
+    "tapToRetry": "Toca para reintentar",
+    "takeFewSecondsToThink": "Toma unos segundos para pensar antes de responder.",
+    "loadingFeedback": "Cargando retroalimentación..."
   },
-  "settings": {
-    "title": "Configuración",
-    "language": "Idioma",
-    "selectLanguage": "Seleccionar idioma"
+  "streak": {
+    "streakDays": "Racha de \ndías",
+    "totalAnswers": "Total de \nrespuestas",
+    "avgLength": "Duración \npromedio"
+  },
+  "onboarding": {
+    "landing": {
+      "title": "Practica, mejora & \nConsigue el trabajo 🎉",
+      "subtitle": "Comienza a entrenar en lo que realmente importa, lo que las empresas realmente te preguntan ✅",
+      "getStarted": "¡Comenzar!"
+    },
+    "name": {
+      "title": "Primero, \n¿Cuál es tu nombre?",
+      "continue": "Continuar",
+      "firstName": "Nombre",
+      "placeholder": "Juan"
+    },
+    "success": {
+      "title": "¡Todo listo! ✅",
+      "subtitle": "Ahora comienza tu práctica para tener más posibilidades de ser contratado.",
+      "letsGo": "¡Vamos!"
+    },
+    "error": {
+      "title": "¡Ups! Algo salió mal. ⁉️"
+    },
+    "signup": {
+      "title": "Por último, \n¡Guarda tu progreso! 🎯",
+      "subtitle": "Al crear una cuenta, tu progreso se guardará día tras día. Tendrás más posibilidades de ser contratado.",
+      "signingIn": "Iniciando sesión..."
+    },
+    "continueWith": "Continuar con {{provider}}"
   }
 }
