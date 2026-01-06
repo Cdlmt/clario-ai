@@ -1,0 +1,45 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "start": "Start",
+      "stop": "Stop",
+      "continue": "Continue",
+      "back": "Back",
+      "next": "Next"
+    },
+    "errors": {
+      "network": "Network error",
+      "unknown": "An unknown error occurred",
+      "permission": "Permission denied",
+      "timeout": "Request timed out"
+    },
+    "loading": "Loading...",
+    "retry": "Retry"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "welcome": "Welcome"
+  },
+  "practice": {
+    "title": "Practice",
+    "startRecording": "Start Recording",
+    "stopRecording": "Stop Recording",
+    "recording": "Recording...",
+    "analyzing": "Analyzing your answer...",
+    "feedback": "Feedback",
+    "tryAgain": "Try Again"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  }
+}

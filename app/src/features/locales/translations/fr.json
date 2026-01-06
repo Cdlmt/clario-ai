@@ -1,0 +1,45 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "start": "Commencer",
+      "stop": "Arrêter",
+      "continue": "Continuer",
+      "back": "Retour",
+      "next": "Suivant"
+    },
+    "errors": {
+      "network": "Erreur réseau",
+      "unknown": "Une erreur inconnue s'est produite",
+      "permission": "Permission refusée",
+      "timeout": "Délai d'attente dépassé"
+    },
+    "loading": "Chargement...",
+    "retry": "Réessayer"
+  },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "signUp": "S'inscrire",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "welcome": "Bienvenue"
+  },
+  "practice": {
+    "title": "Entraînement",
+    "startRecording": "Commencer l'enregistrement",
+    "stopRecording": "Arrêter l'enregistrement",
+    "recording": "Enregistrement en cours...",
+    "analyzing": "Analyse de votre réponse...",
+    "feedback": "Retour d'expérience",
+    "tryAgain": "Réessayer"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "selectLanguage": "Sélectionner la langue"
+  }
+}
