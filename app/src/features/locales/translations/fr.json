@@ -57,6 +57,10 @@
       "firstName": "Prénom",
       "placeholder": "Jean"
     },
+    "job": {
+      "title": "Deuxièmement, \nQuel est votre métier ?",
+      "continue": "Continuer"
+    },
     "success": {
       "title": "Tout est prêt ! ✅",
       "subtitle": "Maintenant commence ton entraînement pour avoir plus de chances d'être embauché.",

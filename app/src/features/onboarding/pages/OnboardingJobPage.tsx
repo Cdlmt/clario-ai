@@ -7,10 +7,12 @@ import OnboardingJobSelector from "../components/onboarding.job.selector";
 import { useState } from "react";
 import { useOnboarding } from "../hooks/useOnboarding";
 import { useJobIndustries } from "../hooks/useJobIndustries";
+import { useTranslation } from "../../locales";
 
 export const OnboardingJobPage = () => {
   const { data, handleJobSubmit } = useOnboarding();
   const { industries, isLoading, error } = useJobIndustries();
+  const { t } = useTranslation();
   const [selectedJob, setSelectedJob] = useState<JobCategory | undefined>(data.job ?? undefined);
 
   const handleContinue = () => {
@@ -25,7 +27,7 @@ export const OnboardingJobPage = () => {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text variant="h2" weight="bold">{"Second, \nWhat's your job ?"}</Text>
+          <Text variant="h2" weight="bold">{t('onboarding:job:title')}</Text>
           <ActivityIndicator size="large" color={colors.black} />
         </View>
       </View>
@@ -36,7 +38,7 @@ export const OnboardingJobPage = () => {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text variant="h2" weight="bold">{"Second, \nWhat's your job ?"}</Text>
+          <Text variant="h2" weight="bold">{t('onboarding:job:title')}</Text>
           <Text variant="body" color={feedbackColors.bad}>{error}</Text>
         </View>
       </View>
@@ -46,7 +48,7 @@ export const OnboardingJobPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text variant="h2" weight="bold">{"Second, \nWhat's your job ?"}</Text>
+        <Text variant="h2" weight="bold">{t('onboarding:job:title')}</Text>
         <View style={styles.jobSelectorsContainer}>
           {industries.map((job) => (
             <OnboardingJobSelector key={job.id} job={job} selected={selectedJob === job} onClick={setSelectedJob} />
@@ -54,7 +56,7 @@ export const OnboardingJobPage = () => {
         </View>
       </View>
       <Button onPress={handleContinue} disabled={!selectedJob}>
-        <Text variant="body" weight="bold" color={colors.white}>Continue</Text>
+        <Text variant="body" weight="bold" color={colors.white}>{t('onboarding:job:continue')}</Text>
       </Button>
     </View>
   );

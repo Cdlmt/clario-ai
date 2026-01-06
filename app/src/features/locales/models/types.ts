@@ -22,6 +22,10 @@ export interface TranslationResources {
       firstName: string;
       placeholder: string;
     };
+    job: {
+      title: string;
+      continue: string;
+    };
     success: {
       title: string;
       subtitle: string;

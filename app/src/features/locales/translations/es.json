@@ -57,6 +57,10 @@
       "firstName": "Nombre",
       "placeholder": "Juan"
     },
+    "job": {
+      "title": "Segundo, \n¿Cuál es tu trabajo?",
+      "continue": "Continuar"
+    },
     "success": {
       "title": "¡Todo listo! ✅",
       "subtitle": "Ahora comienza tu práctica para tener más posibilidades de ser contratado.",
