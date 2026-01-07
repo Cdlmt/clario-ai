@@ -1,11 +1,12 @@
 import { supabase } from '../lib/supabase';
+import { JobIndustry } from '../models/industry';
 import { QuestionResponse } from '../schemas/question.schema';
 
 export class QuestionService {
   /**
    * Get user's industry from the database
    */
-  static async getUserIndustry(userId: string): Promise<number | null> {
+  static async getUserIndustry(userId: string): Promise<JobIndustry | null> {
     const { data, error } = await supabase
       .from('users')
       .select('job_industry')
@@ -17,20 +18,30 @@ export class QuestionService {
       return null;
     }
 
-    return data.job_industry;
+    const { data: industryData, error: industryError } = await supabase
+      .from('job_industries')
+      .select('*')
+      .eq('id', data.job_industry)
+      .single();
+
+    if (industryError || !industryData) {
+      return null;
+    }
+
+    return industryData;
   }
 
   /**
    * Get a random question filtered by user's industry
    */
   static async getRandomQuestionByIndustry(
-    userIndustry: number
+    userIndustry: JobIndustry
   ): Promise<QuestionResponse | null> {
     // First, count total questions for this industry
     const { count, error: countError } = await supabase
       .from('questions')
       .select('*', { count: 'exact', head: true })
-      .eq('industry', userIndustry);
+      .eq('industry', userIndustry.id);
 
     if (countError) {
       console.error('Error counting questions:', countError);
@@ -58,7 +69,7 @@ export class QuestionService {
         )
       `
       )
-      .eq('industry', userIndustry)
+      .eq('industry', userIndustry.id)
       .range(randomOffset, randomOffset);
 
     if (error) {
@@ -82,6 +93,11 @@ export class QuestionService {
             name: (questionData.question_categories as any).name,
           }
         : undefined,
+      industry: {
+        id: userIndustry.id,
+        key: userIndustry.key,
+        name: userIndustry.name,
+      },
     };
   }
 
@@ -90,7 +106,7 @@ export class QuestionService {
    */
   static async getRandomQuestionByCategoryAndIndustry(
     categoryKey: string,
-    userIndustry: number
+    userIndustry: JobIndustry
   ): Promise<QuestionResponse | null> {
     // First, find the category by key
     const { data: categoryData, error: categoryError } = await supabase
@@ -108,7 +124,7 @@ export class QuestionService {
       .from('questions')
       .select('*', { count: 'exact', head: true })
       .eq('category', categoryData.id)
-      .eq('industry', userIndustry);
+      .eq('industry', userIndustry.id);
 
     if (countError) {
       console.error('Error counting questions by category:', countError);
@@ -137,7 +153,7 @@ export class QuestionService {
       `
       )
       .eq('category', categoryData.id)
-      .eq('industry', userIndustry)
+      .eq('industry', userIndustry.id)
       .range(randomOffset, randomOffset);
 
     if (error) {
@@ -161,6 +177,11 @@ export class QuestionService {
             name: (questionData.question_categories as any).name,
           }
         : undefined,
+      industry: {
+        id: userIndustry.id,
+        key: userIndustry.key,
+        name: userIndustry.name,
+      },
     };
   }
 

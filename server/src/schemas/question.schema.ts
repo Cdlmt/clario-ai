@@ -11,6 +11,13 @@ export const questionResponseSchema = z.object({
       name: z.string(),
     })
     .optional(),
+  industry: z
+    .object({
+      id: z.number(),
+      key: z.string(),
+      name: z.string(),
+    })
+    .optional(),
 });
 
 export type QuestionResponse = z.infer<typeof questionResponseSchema>;

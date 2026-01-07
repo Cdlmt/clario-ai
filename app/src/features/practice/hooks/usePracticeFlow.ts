@@ -61,7 +61,7 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
   );
 
   const startPractice = useCallback(
-    async (questionText: string, category?: string) => {
+    async (questionText: string, category?: string, industry?: string) => {
       try {
         // Refresh membership data if needed before checking limits
         await refreshMembershipIfNeeded();
@@ -73,7 +73,7 @@ export function usePracticeFlow(): UsePracticeFlowReturn {
           return;
         }
 
-        const question = createQuestion(questionText, category);
+        const question = createQuestion(questionText, category, industry);
         startSession(question);
         router.push('/practice');
       } catch (error) {

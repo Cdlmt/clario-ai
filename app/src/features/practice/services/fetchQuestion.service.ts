@@ -7,10 +7,17 @@ export type QuestionCategory = {
   name: string;
 };
 
+export type JobIndustry = {
+  id: number;
+  key: string;
+  name: string;
+};
+
 export type QuestionResponse = {
   id: number;
   text: string;
   category?: QuestionCategory;
+  industry?: JobIndustry;
 };
 
 export type FetchQuestionError = {

@@ -40,7 +40,11 @@ export function useFetchQuestion(category?: string): UseFetchQuestionReturn {
       }
 
       const questionData = await fetchRandomQuestion(category);
-      const question = createQuestion(questionData.text, questionData.category);
+      const question = createQuestion(
+        questionData.text,
+        questionData.category,
+        questionData.industry
+      );
       startSession(question);
     } catch (err) {
       const message =
