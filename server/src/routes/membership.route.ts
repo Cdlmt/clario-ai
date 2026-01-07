@@ -99,6 +99,68 @@ router.post(
   }
 );
 
+// POST /membership/sync-pro - Sync pro status from device (Superwall integration)
+router.post(
+  '/sync-pro',
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user!.id;
+      const { entitlementId } = req.body;
+
+      if (!entitlementId || typeof entitlementId !== 'string') {
+        return res.status(400).json({
+          error: 'INVALID_REQUEST',
+          message: 'entitlementId is required and must be a string',
+        });
+      }
+
+      const result = await MembershipService.syncProFromDevice(
+        userId,
+        entitlementId
+      );
+
+      res.json({
+        success: result.success,
+        updated: result.updated,
+      });
+    } catch (error: any) {
+      console.error('Error syncing pro status:', error);
+      res.status(500).json({
+        error: 'SYNC_PRO_FAILED',
+        message:
+          error.message || 'Erreur lors de la synchronisation du statut pro',
+      });
+    }
+  }
+);
+
+// POST /membership/sync-free - Sync free status from device (when user loses pro status)
+router.post(
+  '/sync-free',
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user!.id;
+
+      const result = await MembershipService.syncFreeFromDevice(userId);
+
+      res.json({
+        success: result.success,
+        updated: result.updated,
+      });
+    } catch (error: any) {
+      console.error('Error syncing free status:', error);
+      res.status(500).json({
+        error: 'SYNC_FREE_FAILED',
+        message:
+          error.message ||
+          'Erreur lors de la synchronisation du statut gratuit',
+      });
+    }
+  }
+);
+
 // POST /membership/webhook - Handle Stripe webhooks for subscription changes
 router.post('/webhook', async (req: Request, res: Response) => {
   try {

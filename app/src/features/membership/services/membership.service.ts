@@ -89,4 +89,48 @@ export class MembershipService {
       await response.json();
     return data;
   }
+
+  static async syncProFromDevice(): Promise<{ success: boolean }> {
+    const response = await ApiService.authenticatedFetch(
+      `${API_BASE_URL}/membership/sync-pro`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          entitlementId: 'pro',
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData: MembershipError = await response.json();
+      throw new Error(errorData.message || 'Failed to sync pro status');
+    }
+
+    const data: { success: boolean } = await response.json();
+    return data;
+  }
+
+  static async syncFreeFromDevice(): Promise<{ success: boolean }> {
+    const response = await ApiService.authenticatedFetch(
+      `${API_BASE_URL}/membership/sync-free`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData: MembershipError = await response.json();
+      throw new Error(errorData.message || 'Failed to sync free status');
+    }
+
+    const data: { success: boolean } = await response.json();
+    return data;
+  }
 }

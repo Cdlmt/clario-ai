@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   MembershipService,
   MembershipData,
@@ -8,25 +8,6 @@ import {
 import { useUser } from 'expo-superwall';
 import usePaywall from './usePaywall';
 import { useMembershipContext } from '../context/MembershipContext';
-
-/**
- * Hook for managing user membership and usage limits
- *
- * Usage example:
- * ```tsx
- * const { handleApiError } = useMembership();
- *
- * try {
- *   await transcribeAudio(audioUri);
- * } catch (error) {
- *   if (await handleApiError(error)) {
- *     // Paywall was shown, error is handled
- *     return;
- *   }
- *   // Handle other errors normally
- * }
- * ```
- */
 
 export interface UseMembershipReturn {
   membership: MembershipInfo | null;
@@ -38,6 +19,7 @@ export interface UseMembershipReturn {
   canPerformAction: (action: 'transcribe' | 'analyze') => Promise<boolean>;
   showUpgradePrompt: () => Promise<void>;
   upgradeToPremium: (customerId?: string) => Promise<void>;
+  restorePurchases: () => Promise<void>;
   handleApiError: (error: any) => Promise<boolean>; // Returns true if error was handled (usage limit)
 }
 
@@ -50,7 +32,7 @@ export const useMembership = (): UseMembershipReturn => {
     refreshMembership: contextRefresh,
     refreshMembershipIfNeeded: contextRefreshIfNeeded,
   } = useMembershipContext();
-  const { subscriptionStatus, setSubscriptionStatus } = useUser();
+  const { subscriptionStatus } = useUser();
   const { showPaywall } = usePaywall();
 
   // Use context refresh functions
@@ -62,15 +44,42 @@ export const useMembership = (): UseMembershipReturn => {
     await contextRefreshIfNeeded();
   }, [contextRefreshIfNeeded]);
 
+  // Helper to determine if user has pro status
+  const isPro =
+    subscriptionStatus.status === 'ACTIVE' &&
+    subscriptionStatus.entitlements.some((e) => e.id === 'pro');
+
+  // Track previous pro status to detect upgrades
+  const prevIsProRef = useRef(isPro);
+
+  async function syncMembershipStatus() {
+    const wasPro = prevIsProRef.current;
+    const nowPro = isPro;
+
+    // Only sync when transitioning to pro (avoid repeated calls)
+    if (!wasPro && nowPro) {
+      await MembershipService.syncProFromDevice();
+      refreshMembership();
+    }
+
+    // Sync when user loses pro status (subscription cancelled/expired)
+    if (wasPro && !nowPro) {
+      await MembershipService.syncFreeFromDevice();
+      refreshMembership();
+    }
+
+    prevIsProRef.current = nowPro;
+  }
+
+  // Sync membership status changes to backend
+  useEffect(() => {
+    syncMembershipStatus();
+  }, [isPro, syncMembershipStatus]);
+
   const canPerformAction = useCallback(
     async (action: 'transcribe' | 'analyze'): Promise<boolean> => {
-      // First check Superwall subscription status and if the user has the pro entitlement
-      if (
-        subscriptionStatus.status === 'ACTIVE' &&
-        subscriptionStatus.entitlements.some((entitlement) =>
-          entitlement.id.includes('pro')
-        )
-      ) {
+      // Check if user has strict pro entitlement match
+      if (isPro) {
         return true;
       }
 
@@ -82,27 +91,28 @@ export const useMembership = (): UseMembershipReturn => {
       // If we don't have usage data, assume they can try (backend will check)
       return true;
     },
-    [usage]
+    [isPro, usage]
   );
 
   const showUpgradePrompt = useCallback(async () => {
     await showPaywall();
   }, []);
 
+  const restorePurchases = useCallback(async () => {
+    try {
+      await refreshMembership();
+    } catch (error) {
+      console.error('Failed to restore purchases:', error);
+      throw error;
+    }
+  }, [refreshMembership]);
+
   const upgradeToPremium = useCallback(
     async (customerId?: string) => {
-      try {
-        await MembershipService.upgradeToPremium(customerId);
-        await setSubscriptionStatus({
-          status: 'ACTIVE',
-          entitlements: [{ id: 'pro', type: 'SERVICE_LEVEL' }],
-        });
-        await refreshMembership(); // Refresh global state
-      } catch (err) {
-        throw err;
-      }
+      // Only trigger the paywall flow - subscription status will be updated by Superwall
+      await showPaywall();
     },
-    [refreshMembership]
+    [showPaywall]
   );
 
   // Handle usage limit exceeded errors from API calls
@@ -145,6 +155,7 @@ export const useMembership = (): UseMembershipReturn => {
     canPerformAction,
     showUpgradePrompt,
     upgradeToPremium,
+    restorePurchases,
     handleApiError,
   };
 };

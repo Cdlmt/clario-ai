@@ -7,7 +7,7 @@ import {
   MembershipStatus,
 } from '../models/membership';
 
-const FREE_DAILY_LIMIT = 10;
+const FREE_DAILY_LIMIT = 3;
 
 export class MembershipService {
   /**
@@ -204,5 +204,59 @@ export class MembershipService {
           ? -1
           : Math.max(0, FREE_DAILY_LIMIT - todayUsage),
     };
+  }
+
+  /**
+   * Sync pro status from device (called when user becomes pro via Superwall)
+   * This method is idempotent and can be called multiple times safely
+   */
+  static async syncProFromDevice(
+    userId: string,
+    entitlementId: string
+  ): Promise<{ success: boolean; updated: boolean }> {
+    // Validate entitlement - only "pro" entitlement is supported
+    if (entitlementId !== 'pro') {
+      throw new Error(`Invalid entitlement: ${entitlementId}`);
+    }
+
+    // Get current membership
+    const membership = await this.getOrCreateUserMembership(userId);
+
+    // If already premium and active, no need to update
+    if (membership.plan_type === 'premium' && membership.status === 'active') {
+      return { success: true, updated: false };
+    }
+
+    // Update to premium
+    await this.updateUserMembership(userId, {
+      plan_type: 'premium',
+      status: 'active',
+    });
+
+    return { success: true, updated: true };
+  }
+
+  /**
+   * Sync free status from device (called when user loses pro status via Superwall)
+   * This method is idempotent and can be called multiple times safely
+   */
+  static async syncFreeFromDevice(
+    userId: string
+  ): Promise<{ success: boolean; updated: boolean }> {
+    // Get current membership
+    const membership = await this.getOrCreateUserMembership(userId);
+
+    // If already free, no need to update
+    if (membership.plan_type === 'free') {
+      return { success: true, updated: false };
+    }
+
+    // Update to free (keep status active for free users)
+    await this.updateUserMembership(userId, {
+      plan_type: 'free',
+      status: 'active',
+    });
+
+    return { success: true, updated: true };
   }
 }
