@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native'
+import { Alert, Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Text from '../../../shared/ui/text';
 import { Feather } from '@expo/vector-icons';
 import { useTranslation } from '../../locales';
@@ -15,8 +15,12 @@ export default function SpecificPracticeItem(props: SpecificPracticeItemProps) {
   const { icon, name, backgroundColor, color } = props;
   const { t } = useTranslation();
 
+  function handlePress() {
+    Alert.alert('Coming soon');
+  }
+
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <TouchableOpacity style={[styles.container, { backgroundColor }]} onPress={handlePress}>
       <View style={styles.contentContainer}>
         <View style={styles.iconContainer}>
           <Image source={icon} style={styles.icon} />
@@ -27,7 +31,7 @@ export default function SpecificPracticeItem(props: SpecificPracticeItemProps) {
         </View>
       </View>
       <Feather name="chevron-right" size={24} color={color} />
-    </View>
+    </TouchableOpacity>
   )
 }
 
