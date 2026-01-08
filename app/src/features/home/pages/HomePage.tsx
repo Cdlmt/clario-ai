@@ -7,6 +7,7 @@ import DailyGoals from '../components/daily.goals';
 import SpecificPractices from '../components/specific.practices';
 import StreakCards from '../components/streak.cards';
 import { useTranslation } from '../../locales';
+import SignoutButton from '../components/signout.button';
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -22,6 +23,8 @@ export default function HomePage() {
       <StreakCards />
       <Divider />
       <SpecificPractices />
+      <Divider />
+      <SignoutButton />
     </ScrollView>
   )
 }

@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity, TouchableOpacityProps } from 'react-nativ
 import { colors } from '../constants/theme';
 
 type ButtonProps = TouchableOpacityProps & {
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'danger';
 };
 
 export default function Button(props: ButtonProps) {
@@ -15,6 +15,7 @@ export default function Button(props: ButtonProps) {
       style={[
         styles.container,
         variant === 'secondary' && styles.secondary,
+        variant === 'danger' && styles.danger,
         disabled && styles.disabled
       ]}
     >
@@ -35,6 +36,9 @@ const styles = StyleSheet.create({
   },
   secondary: {
     backgroundColor: colors.secondary,
+  },
+  danger: {
+    backgroundColor: colors.danger,
   },
   disabled: {
     opacity: 0.5,

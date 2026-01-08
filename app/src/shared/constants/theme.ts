@@ -6,6 +6,7 @@ export const colors = {
   lightGray: '#F1F1F1',
   mediumGray: '#E0DFDF',
   darkGray: '#D0D0D0',
+  danger: '#FF2727',
 };
 
 export const feedbackColors = {
