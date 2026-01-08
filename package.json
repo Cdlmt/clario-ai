@@ -4,7 +4,9 @@
   "scripts": {
     "app": "pnpm --filter app start",
     "server": "pnpm --filter server dev",
-    "dev": "concurrently \"pnpm app\" \"pnpm server\""
+    "dev": "concurrently \"pnpm app\" \"pnpm server\"",
+    "build:server": "pnpm --filter server build",
+    "start:server": "pnpm --filter server start"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
