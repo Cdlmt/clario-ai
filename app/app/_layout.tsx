@@ -10,16 +10,16 @@ import "../src/features/locales/services/i18n";
 export default function RootLayout() {
   return (
     <LanguageProvider>
-    <PaywallProvider>
-      <AuthProvider>
-        <MembershipProvider>
-          <SafeAreaProvider>
-            <StatusBar style="auto" />
-            <RootStack />
-          </SafeAreaProvider>
-        </MembershipProvider>
-      </AuthProvider>
-    </PaywallProvider>
+      <PaywallProvider>
+        <AuthProvider>
+          <MembershipProvider>
+            <SafeAreaProvider>
+              <StatusBar style="auto" />
+              <RootStack />
+            </SafeAreaProvider>
+          </MembershipProvider>
+        </AuthProvider>
+      </PaywallProvider>
     </LanguageProvider>
   );
 }
