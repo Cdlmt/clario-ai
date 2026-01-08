@@ -102,6 +102,9 @@ importers:
 
   server:
     dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.39.0
+        version: 2.89.0
       '@types/fluent-ffmpeg':
         specifier: ^2.1.28
         version: 2.1.28

@@ -3,7 +3,9 @@ import { TranscribeResponse } from '../schemas/transcribe.schema';
 import { uploadAudio } from '../middlewares/multer.middleware';
 import { TranscriptionService } from '../services/transcription.service';
 import { SessionService } from '../services/session.service';
+import { StorageService } from '../services/storage.service';
 import { authenticateUser } from '../middlewares/auth.middleware';
+import { config } from '../lib/config';
 import {
   checkUsageLimit,
   incrementUsage,
@@ -28,12 +30,26 @@ router.post(
         });
       }
 
-      // Transcribe the audio
-      const result = await TranscriptionService.transcribeAudio(req.file.path);
+      const { buffer, originalname, mimetype } = req.file;
+      const userId = req.user!.id;
+
+      // Upload audio to Supabase Storage
+      const uploadResult = await StorageService.uploadAudio({
+        userId,
+        buffer,
+        filename: originalname,
+        contentType: mimetype,
+      });
+
+      // Transcribe the audio from buffer
+      const result = await TranscriptionService.transcribeAudio(
+        buffer,
+        mimetype
+      );
 
       // Create session in database
       const session = await SessionService.createSession(
-        req.user!.id,
+        userId,
         '', // question will be set during analysis
         result.transcript,
         0 // duration will be set during analysis
@@ -43,6 +59,10 @@ router.post(
         transcript: result.transcript,
         sessionId: session.id,
       };
+
+      if (config.audio.retention === 'none') {
+        await StorageService.deleteObject(uploadResult.path);
+      }
 
       res.json(response);
     } catch (error) {
@@ -62,7 +82,9 @@ router.post(
       if (error instanceof Error && error.message.includes('File too large')) {
         return res.status(400).json({
           error: 'FILE_TOO_LARGE',
-          message: 'Audio file is too large. Maximum size is 25MB.',
+          message: `Audio file is too large. Maximum size is ${
+            config.audio.maxSizeBytes / (1024 * 1024)
+          }MB.`,
         });
       }
 

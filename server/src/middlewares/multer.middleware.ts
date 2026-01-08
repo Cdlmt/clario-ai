@@ -1,36 +1,17 @@
 import multer from 'multer';
 import { Request } from 'express';
+import { config } from '../lib/config';
 
-// Configure multer for audio file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  },
-});
+// Configure multer for audio file uploads using memory storage
+const storage = multer.memoryStorage();
 
 const fileFilter = (
   req: Request,
   file: Express.Multer.File,
   cb: multer.FileFilterCallback
 ) => {
-  // Accept audio files - comprehensive list of MIME types
-  const allowedMimes = [
-    'audio/wav',
-    'audio/mpeg',
-    'audio/mp3',
-    'audio/webm',
-    'audio/ogg',
-    'audio/aac',
-    'audio/flac',
-    'audio/m4a',
-    'audio/x-m4a',
-    'audio/mp4',
-    'audio/x-wav',
-    'audio/vnd.wav',
-  ];
+  // Use allowed MIME types from config
+  const allowedMimes = config.audio.allowedMimeTypes;
 
   // Also check file extension as fallback for some browsers/apps
   const allowedExtensions = [
@@ -65,6 +46,6 @@ export const uploadAudio = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 25 * 1024 * 1024, // 25MB limit for audio files
+    fileSize: config.audio.maxSizeBytes, // Use configured limit
   },
 }).single('audio');

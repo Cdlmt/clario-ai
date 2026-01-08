@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
+import { config } from './config';
 
-const SUPABASE_URL =
-  process.env.SUPABASE_URL || 'https://kaxpgqiwdzmfmsjernfq.supabase.co';
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const SUPABASE_URL = config.supabase.url;
+const SUPABASE_SERVICE_ROLE_KEY = config.supabase.serviceRoleKey;
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: {

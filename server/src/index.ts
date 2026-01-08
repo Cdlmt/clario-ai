@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import './lib/config';
 import transcribeRoute from './routes/transcribe.route';
 import analyzeRoute from './routes/analyze.route';
 import questionRoute from './routes/question.route';
