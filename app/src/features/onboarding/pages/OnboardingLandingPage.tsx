@@ -1,10 +1,11 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import Button from "../../../shared/ui/button";
 import Text from "../../../shared/ui/text";
 import { colors, paddings } from "../../../shared/constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useOnboarding } from "../hooks/useOnboarding";
 import { useTranslation } from "../../locales";
+import landingIllustration from '../../../shared/assets/illustrations/landing.png';
 
 export const OnboardingLandingPage = () => {
   const insets = useSafeAreaInsets();
@@ -14,8 +15,7 @@ export const OnboardingLandingPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.illustration}>
-        {/* TODO: Replace with actual illustration */}
-        <View />
+        <Image source={landingIllustration} style={styles.illustrationImage} />
       </View>
 
       <View style={[styles.content, { paddingBottom: insets.bottom + paddings.vertical }]}>
@@ -43,12 +43,16 @@ const styles = StyleSheet.create({
     height: '70%',
     backgroundColor: colors.lightGray,
   },
+  illustrationImage: {
+    width: '100%',
+    height: '100%',
+  },
   content: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    minHeight: '40%',
+    minHeight: '38%',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: paddings.horizontal,
