@@ -34,7 +34,7 @@ export default function PracticeHeader(props: PracticeHeaderProps) {
   const industry = useMemo(() => (question?.industry as JobIndustry)?.name ? (question?.industry as JobIndustry).name : question?.industry, [question]);
   const category = useMemo(() => (question?.category as QuestionCategory)?.name ? (question?.category as QuestionCategory).name : question?.category, [question]);
 
-  const subTitle = `${industry} · ${category}`;
+  const subTitle = `${industry || ''} · ${category || ''}`;
   const insets = useSafeAreaInsets();
 
   return (
