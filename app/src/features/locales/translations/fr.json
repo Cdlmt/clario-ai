@@ -6,7 +6,8 @@
     "loading": "Chargement...",
     "dailyGoals": "🗓️ Objectifs quotidiens",
     "specificPractices": "🔓 Pratiques spécifiques",
-    "practiceWithCompany": "Entraîne-toi avec les questions que {{company}} pose en entretien"
+    "practiceWithCompany": "Entraîne-toi avec les questions que {{company}} pose en entretien",
+    "signout": "Déconnexion"
   },
   "feedback": {
     "clarity": "Clarté",

@@ -6,7 +6,8 @@
     "loading": "Cargando...",
     "dailyGoals": "🗓️ Objetivos diarios",
     "specificPractices": "🔓 Prácticas específicas",
-    "practiceWithCompany": "Practica con preguntas que {{company}} hace en entrevistas"
+    "practiceWithCompany": "Practica con preguntas que {{company}} hace en entrevistas",
+    "signout": "Cerrar sesión"
   },
   "feedback": {
     "clarity": "Claridad",
