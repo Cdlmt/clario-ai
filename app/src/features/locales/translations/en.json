@@ -7,7 +7,13 @@
     "dailyGoals": "🗓️ Daily goals",
     "specificPractices": "🔓 Specific practices",
     "practiceWithCompany": "Practice with questions {{company}} asks in interviews",
-    "signout": "Sign out"
+    "signout": "Sign out",
+    "deleteAccount": "Delete my account",
+    "deleteAccountTitle": "Delete Account",
+    "deleteAccountMessage": "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "deleteAccountError": "Failed to delete account. Please try again."
   },
   "feedback": {
     "clarity": "Clarity",

@@ -8,6 +8,7 @@ import onboardingRoute from './routes/onboarding.route';
 import sessionsRoute from './routes/sessions.route';
 import statisticsRoute from './routes/statistics.route';
 import membershipRoute from './routes/membership.route';
+import accountRoute from './routes/account.route';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,6 +34,7 @@ app.use('/onboarding', onboardingRoute);
 app.use('/sessions', sessionsRoute);
 app.use('/statistics', statisticsRoute);
 app.use('/membership', membershipRoute);
+app.use('/account', accountRoute);
 
 app.listen(parseInt(PORT as string, 10), '0.0.0.0', () => {
   console.log(

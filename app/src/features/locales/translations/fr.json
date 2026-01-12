@@ -7,7 +7,13 @@
     "dailyGoals": "🗓️ Objectifs quotidiens",
     "specificPractices": "🔓 Pratiques spécifiques",
     "practiceWithCompany": "Entraîne-toi avec les questions que {{company}} pose en entretien",
-    "signout": "Déconnexion"
+    "signout": "Déconnexion",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteAccountTitle": "Supprimer le compte",
+    "deleteAccountMessage": "Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte et supprimera vos données de nos serveurs.",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "deleteAccountError": "Échec de la suppression du compte. Veuillez réessayer."
   },
   "feedback": {
     "clarity": "Clarté",

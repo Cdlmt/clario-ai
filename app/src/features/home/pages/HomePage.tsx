@@ -8,6 +8,7 @@ import SpecificPractices from '../components/specific.practices';
 import StreakCards from '../components/streak.cards';
 import { useTranslation } from '../../locales';
 import SignoutButton from '../components/signout.button';
+import DeleteAccountButton from '../components/delete.account.button';
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export default function HomePage() {
       <SpecificPractices />
       <Divider />
       <SignoutButton />
+      <DeleteAccountButton />
     </ScrollView>
   )
 }

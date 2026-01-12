@@ -7,7 +7,13 @@
     "dailyGoals": "🗓️ Objetivos diarios",
     "specificPractices": "🔓 Prácticas específicas",
     "practiceWithCompany": "Practica con preguntas que {{company}} hace en entrevistas",
-    "signout": "Cerrar sesión"
+    "signout": "Cerrar sesión",
+    "deleteAccount": "Eliminar mi cuenta",
+    "deleteAccountTitle": "Eliminar cuenta",
+    "deleteAccountMessage": "Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y removerá tus datos de nuestros servidores.",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "deleteAccountError": "Error al eliminar la cuenta. Por favor, inténtalo de nuevo."
   },
   "feedback": {
     "clarity": "Claridad",
