@@ -17,7 +17,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.clario.interviewcoach",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSMicrophoneUsageDescription": "Clario uses the microphone to record your spoken interview answers so they can be transcribed and analyzed to provide personalized feedback on clarity and communication."
       }
     },
     "android": {
