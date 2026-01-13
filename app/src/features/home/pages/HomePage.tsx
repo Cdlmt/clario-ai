@@ -23,8 +23,8 @@ export default function HomePage() {
       <DailyGoals />
       <StreakCards />
       <Divider />
-      <SpecificPractices />
-      <Divider />
+      {/* <SpecificPractices />
+      <Divider /> */}
       <SignoutButton />
       <DeleteAccountButton />
     </ScrollView>
