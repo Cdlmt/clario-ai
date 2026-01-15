@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// USER & AUTH
+// ============================================
+
+model User {
+  id          String   @id @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  name        String?
+  jobIndustry BigInt?  @map("job_industry")
+
+  // Relations
+  industry JobIndustry?       @relation(fields: [jobIndustry], references: [id])
+  sessions InterviewSession[]
+
+  @@map("users")
+}
+
+model UserMembership {
+  userId           String   @id @map("user_id") @db.Uuid
+  planType         String   @default("free") @map("plan_type")
+  status           String   @default("active")
+  createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime? @default(now()) @map("updated_at") @db.Timestamptz
+  stripeCustomerId String?  @map("stripe_customer_id")
+
+  @@map("user_memberships")
+}
+
+model DailyUsage {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String   @map("user_id") @db.Uuid
+  date          DateTime @default(dbgenerated("CURRENT_DATE")) @db.Date
+  questionsUsed Int      @default(0) @map("questions_used")
+  createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime? @default(now()) @map("updated_at") @db.Timestamptz
+
+  @@map("daily_usage")
+}
+
+// ============================================
+// QUESTIONS & CATEGORIES
+// ============================================
+
+model JobIndustry {
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  key       String?
+  name      String?
+  icon      String?
+
+  // Relations
+  users     User[]
+  questions Question[]
+
+  @@map("job_industries")
+}
+
+model QuestionCategory {
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  key       String?
+  name      String?
+
+  // Relations
+  questions Question[]
+
+  @@map("question_categories")
+}
+
+model Question {
+  id         BigInt   @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+  text       String?
+  categoryId BigInt?  @map("category")
+  industryId BigInt?  @map("industry")
+
+  // Relations
+  category QuestionCategory? @relation(fields: [categoryId], references: [id])
+  industry JobIndustry?      @relation(fields: [industryId], references: [id])
+
+  @@map("questions")
+}
+
+// ============================================
+// INTERVIEW SESSIONS & FEEDBACK
+// ============================================
+
+model InterviewSession {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  question        String
+  transcript      String
+  durationSeconds Int       @default(0) @map("duration_seconds")
+  analyzedAt      DateTime? @map("analyzed_at") @db.Timestamptz
+  feedbackId      String?   @unique @map("feedback_id") @db.Uuid
+  userId          String?   @map("user_id") @db.Uuid
+
+  // Relations
+  user     User?     @relation(fields: [userId], references: [id])
+  feedback Feedback? @relation(fields: [feedbackId], references: [id])
+
+  @@map("interview_sessions")
+}
+
+model Feedback {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId     String    @map("session_id") @db.Uuid
+  createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  overallScore  Int       @map("overall_score")
+  keySuggestion String    @map("key_suggestion")
+
+  // Relations
+  session     InterviewSession?
+  clarity     FeedbackClarity?
+  length      FeedbackLength?
+  weakWords   FeedbackWeakWords?
+  conciseness FeedbackConciseness?
+  confidence  FeedbackConfidence?
+
+  @@map("feedback")
+}
+
+model FeedbackClarity {
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  feedbackId String @map("feedback_id") @db.Uuid
+  rating     Int
+  comment    String
+
+  // Relations
+  feedback Feedback @relation(fields: [feedbackId], references: [id])
+
+  @@unique([feedbackId])
+  @@map("feedback_clarity")
+}
+
+model FeedbackLength {
+  id                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  feedbackId            String @map("feedback_id") @db.Uuid
+  rating                Int
+  durationSeconds       Int    @map("duration_seconds")
+  durationTargetSeconds Int    @map("duration_target_seconds")
+  comment               String
+
+  // Relations
+  feedback Feedback @relation(fields: [feedbackId], references: [id])
+
+  @@unique([feedbackId])
+  @@map("feedback_length")
+}
+
+model FeedbackWeakWords {
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  feedbackId String @map("feedback_id") @db.Uuid
+  rating     Int
+  comment    String
+
+  // Relations
+  feedback Feedback   @relation(fields: [feedbackId], references: [id])
+  words    WeakWord[]
+
+  @@unique([feedbackId])
+  @@map("feedback_weak_words")
+}
+
+model WeakWord {
+  id                  String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  feedbackWeakWordsId String @map("feedback_weak_words_id") @db.Uuid
+  word                String
+  count               Int
+
+  // Relations
+  feedbackWeakWords FeedbackWeakWords @relation(fields: [feedbackWeakWordsId], references: [id])
+
+  @@map("weak_words")
+}
+
+model FeedbackConciseness {
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  feedbackId String @map("feedback_id") @db.Uuid
+  rating     Int
+  comment    String
+
+  // Relations
+  feedback Feedback @relation(fields: [feedbackId], references: [id])
+
+  @@unique([feedbackId])
+  @@map("feedback_conciseness")
+}
+
+model FeedbackConfidence {
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  feedbackId String @map("feedback_id") @db.Uuid
+  rating     Int
+  comment    String
+
+  // Relations
+  feedback Feedback @relation(fields: [feedbackId], references: [id])
+
+  @@unique([feedbackId])
+  @@map("feedback_confidence")
+}
