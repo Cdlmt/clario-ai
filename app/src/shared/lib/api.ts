@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { i18n } from '../../features/locales';
 
 export class ApiService {
   private static async getAuthHeaders(): Promise<Record<string, string>> {
@@ -13,6 +14,8 @@ export class ApiService {
     return {
       Authorization: `Bearer ${session.access_token}`,
       'Content-Type': 'application/json',
+      // 'Accept-Language': i18n.language || 'en',
+      'Accept-Language': 'fr',
     };
   }
 
@@ -49,7 +52,7 @@ export class ApiService {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${session.access_token}`,
-        // Don't set Content-Type for FormData, let browser set it with boundary
+        'Accept-Language': i18n.language || 'en',
       },
       body: formData,
     });

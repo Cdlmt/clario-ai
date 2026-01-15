@@ -2,6 +2,9 @@ import { supabase } from '../lib/supabase';
 import { JobIndustry } from '../models/industry';
 import { QuestionResponse } from '../schemas/question.schema';
 
+const DEFAULT_LANGUAGE = 'en';
+const SUPPORTED_LANGUAGES = ['en', 'fr', 'es'];
+
 export class QuestionService {
   /**
    * Get user's industry from the database
@@ -32,12 +35,37 @@ export class QuestionService {
   }
 
   /**
+   * Get translated text for a question
+   */
+  private static async getTranslatedText(
+    questionId: number,
+    originalText: string | null,
+    language: string
+  ): Promise<string> {
+    if (
+      language === DEFAULT_LANGUAGE ||
+      !SUPPORTED_LANGUAGES.includes(language)
+    ) {
+      return originalText || '';
+    }
+
+    const { data: translation } = await supabase
+      .from('question_translations')
+      .select('text')
+      .eq('question_id', questionId)
+      .eq('language', language)
+      .single();
+
+    return translation?.text || originalText || '';
+  }
+
+  /**
    * Get a random question filtered by user's industry
    */
   static async getRandomQuestionByIndustry(
-    userIndustry: JobIndustry
+    userIndustry: JobIndustry,
+    language: string = DEFAULT_LANGUAGE
   ): Promise<QuestionResponse | null> {
-    // First, count total questions for this industry
     const { count, error: countError } = await supabase
       .from('questions')
       .select('*', { count: 'exact', head: true })
@@ -52,7 +80,6 @@ export class QuestionService {
       return null;
     }
 
-    // Generate random offset
     const randomOffset = Math.floor(Math.random() * count);
 
     const { data, error } = await supabase
@@ -82,10 +109,15 @@ export class QuestionService {
     }
 
     const questionData = data[0];
+    const translatedText = await this.getTranslatedText(
+      questionData.id,
+      questionData.text,
+      language
+    );
 
     return {
       id: questionData.id,
-      text: questionData.text,
+      text: translatedText,
       category: questionData.question_categories
         ? {
             id: (questionData.question_categories as any).id,
@@ -106,9 +138,9 @@ export class QuestionService {
    */
   static async getRandomQuestionByCategoryAndIndustry(
     categoryKey: string,
-    userIndustry: JobIndustry
+    userIndustry: JobIndustry,
+    language: string = DEFAULT_LANGUAGE
   ): Promise<QuestionResponse | null> {
-    // First, find the category by key
     const { data: categoryData, error: categoryError } = await supabase
       .from('question_categories')
       .select('id')
@@ -119,7 +151,6 @@ export class QuestionService {
       throw new Error(`Category not found: ${categoryKey}`);
     }
 
-    // First, count total questions for this category and industry
     const { count, error: countError } = await supabase
       .from('questions')
       .select('*', { count: 'exact', head: true })
@@ -135,10 +166,8 @@ export class QuestionService {
       return null;
     }
 
-    // Generate random offset
     const randomOffset = Math.floor(Math.random() * count);
 
-    // Get a random question from this category and user's industry
     const { data, error } = await supabase
       .from('questions')
       .select(
@@ -166,10 +195,15 @@ export class QuestionService {
     }
 
     const questionData = data[0];
+    const translatedText = await this.getTranslatedText(
+      questionData.id,
+      questionData.text,
+      language
+    );
 
     return {
       id: questionData.id,
-      text: questionData.text,
+      text: translatedText,
       category: questionData.question_categories
         ? {
             id: (questionData.question_categories as any).id,
@@ -200,5 +234,23 @@ export class QuestionService {
     }
 
     return data.map((cat) => cat.key);
+  }
+
+  /**
+   * Parse language from Accept-Language header
+   */
+  static parseLanguage(acceptLanguage: string | undefined): string {
+    if (!acceptLanguage) {
+      return DEFAULT_LANGUAGE;
+    }
+
+    const primaryLanguage = acceptLanguage
+      .split(',')[0]
+      .split('-')[0]
+      .toLowerCase();
+
+    return SUPPORTED_LANGUAGES.includes(primaryLanguage)
+      ? primaryLanguage
+      : DEFAULT_LANGUAGE;
   }
 }

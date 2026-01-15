@@ -20,6 +20,11 @@ router.get(
         return res.status(401).json({ error: 'User not authenticated' });
       }
 
+      // Get language from Accept-Language header
+      const language = QuestionService.parseLanguage(
+        req.headers['accept-language']
+      );
+
       // Get user's industry
       const userIndustry = await QuestionService.getUserIndustry(userId);
       if (!userIndustry) {
@@ -28,9 +33,10 @@ router.get(
         });
       }
 
-      // Get a random question from user's industry
+      // Get a random question from user's industry in the requested language
       const question = await QuestionService.getRandomQuestionByIndustry(
-        userIndustry
+        userIndustry,
+        language
       );
       if (!question) {
         return res
@@ -69,6 +75,11 @@ router.get(
         return res.status(401).json({ error: 'User not authenticated' });
       }
 
+      // Get language from Accept-Language header
+      const language = QuestionService.parseLanguage(
+        req.headers['accept-language']
+      );
+
       // Get user's industry
       const userIndustry = await QuestionService.getUserIndustry(userId);
       if (!userIndustry) {
@@ -77,11 +88,12 @@ router.get(
         });
       }
 
-      // Get a random question from this category and user's industry
+      // Get a random question from this category and user's industry in the requested language
       const question =
         await QuestionService.getRandomQuestionByCategoryAndIndustry(
           category,
-          userIndustry
+          userIndustry,
+          language
         );
 
       if (!question) {
