@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "prod": "npm run build && npm run start"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
