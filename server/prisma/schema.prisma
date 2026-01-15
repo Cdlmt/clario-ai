@@ -84,10 +84,24 @@ model Question {
   industryId BigInt?  @map("industry")
 
   // Relations
-  category QuestionCategory? @relation(fields: [categoryId], references: [id])
-  industry JobIndustry?      @relation(fields: [industryId], references: [id])
+  category     QuestionCategory?      @relation(fields: [categoryId], references: [id])
+  industry     JobIndustry?           @relation(fields: [industryId], references: [id])
+  translations QuestionTranslation[]
 
   @@map("questions")
+}
+
+model QuestionTranslation {
+  id         BigInt   @id @default(autoincrement())
+  questionId BigInt   @map("question_id")
+  language   String   @db.VarChar(5)
+  text       String
+
+  // Relations
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, language])
+  @@map("question_translations")
 }
 
 // ============================================
