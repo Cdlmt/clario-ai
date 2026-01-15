@@ -14,8 +14,7 @@ export class ApiService {
     return {
       Authorization: `Bearer ${session.access_token}`,
       'Content-Type': 'application/json',
-      // 'Accept-Language': i18n.language || 'en',
-      'Accept-Language': 'fr',
+      'Accept-Language': i18n.language || 'en',
     };
   }
 
