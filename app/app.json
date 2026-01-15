@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Clario - AI Interview Coach",
+    "name": "Clario AI - Interview Coach",
     "slug": "clario-ai-interview-coach",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -18,6 +18,7 @@
       "bundleIdentifier": "com.clario.interviewcoach",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleDisplayName": "Clario AI - Interview Coach",
         "NSMicrophoneUsageDescription": "Clario uses the microphone to record your spoken interview answers so they can be transcribed and analyzed to provide personalized feedback on clarity and communication."
       }
     },
