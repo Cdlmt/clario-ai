@@ -6,7 +6,8 @@
     "server": "pnpm --filter server dev",
     "dev": "concurrently \"pnpm app\" \"pnpm server\"",
     "build:server": "pnpm install && pnpm --filter server build",
-    "start:server": "pnpm --filter server start"
+    "start:server": "pnpm --filter server start",
+    "postinstall": "pnpm --filter server prisma generate"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
