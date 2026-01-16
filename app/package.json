@@ -5,7 +5,8 @@
   "scripts": {
     "start": "expo start",
     "ios": "expo run:ios",
-    "android": "expo run:android"
+    "android": "expo run:android",
+    "build": "eas build -p ios --profile production --auto-submit"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
