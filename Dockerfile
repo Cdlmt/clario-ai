@@ -23,5 +23,7 @@ COPY . .
 
 WORKDIR /repo/server
 
+RUN pnpm prisma generate
+
 EXPOSE 3000
 CMD ["pnpm", "prod"]
